@@ -1,4 +1,4 @@
-#include "Observable.h"
+#include "MyObservable.h"
 
 void MyObservable::addObserver(MyObserver* const& observer)
 {

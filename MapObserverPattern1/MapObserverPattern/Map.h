@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Observable.h"
+#include "MyObservable.h"
 #include "Country.h"
 class Map : public MyObservable
 {

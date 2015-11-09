@@ -121,8 +121,8 @@
     <ClInclude Include="Country.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapView.h" />
-    <ClInclude Include="Observable.h" />
-    <ClInclude Include="Observer.h" />
+    <ClInclude Include="MyObservable.h" />
+    <ClInclude Include="MyObserver.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +130,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapView.cpp" />
-    <ClCompile Include="Observable.cpp" />
+    <ClCompile Include="MyObservable.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

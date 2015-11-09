@@ -12,3 +12,19 @@ string Player::GetPlayerName()
 {
 	return playerName;
 }
+
+string Player::GetPlayerName(int max)
+{
+	string foo = playerName.substr(0, max);
+	return foo;
+}
+
+const bool Player::isAlive()
+{
+	return alive;
+}
+
+void Player::kill()
+{
+	alive = false;
+}

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <vector>
-#include "Observer.h"
+#include "MyObserver.h"
 
 class MyObservable {
 private:
+	
+
 	std::vector<MyObserver*> observers;
 
 public:

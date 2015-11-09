@@ -2,9 +2,11 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <algorithm>
 #include "Player.h"
 #include "Country.h"
 #include "Map.h"
+#include "MapView.h"
 
 /*
 Michael Bilinsky 26992358
@@ -32,15 +34,18 @@ const string MAP_INPUT[][3] =
 { { "Canada", "USA", "Foolandia" },
 { "Foolandia", "Canada","Iceland" },
 { "USA", "Canada", "Mexico" },
-{ "United Kingdom", "Ukraine", "Iceland" },
-{ "Mexico", "USA", "South Africa" },
-{ "Ukraine", "United Kingdom", "China" },
+{ "UK", "Ukraine", "Iceland" },
+{ "Mexico", "USA", "Egypt" },
+{ "Ukraine", "UK", "China" },
 { "China", "Ukraine", "Australia" },
-{ "Australia", "South Africa", "China" },
-{ "South Africa", "Mexico", "Australia" },
-{ "Iceland", "Foolandia", "United Kingdom" } };
+{ "Australia", "Egypt", "China" },
+{ "Egypt", "Mexico", "Australia" },
+{ "Iceland", "Foolandia", "UK" } };
+
+const string CONTINENTS[] = { "N. America", "N. America", "N. America", "Europe", "N. America", "Europe","Asia","Oceania", "Africa", "Europe" };
 
 Map map;
+MapView* mapView;
 
 // Ask for number of players and their names
 void queryPlayers();
@@ -63,8 +68,12 @@ void playerAttack(Player*);
 // Allow the player to perform their fortification move
 void playerFortify(Player*);
 
+void checkPlayerAndKill(Player*);
+
 int main()
 {
+	mapView = new MapView(&map);
+
 	cout << "Welcome to the Risk game driver" << endl;
 
 	// Randomize the random number generator using the current time as a seed
@@ -73,6 +82,8 @@ int main()
 	queryPlayers();
 
 	assignCountries();
+
+	map.notifyObservers();
 
 	runGame();
 
@@ -122,7 +133,7 @@ void assignCountries()
 	for (int i = 0; i < NUM_COUNTRIES; i++)
 	{
 		// Create the countries
-		map.addCountry(new Country(MAP_INPUT[i][0]));
+		map.addCountry(new Country(MAP_INPUT[i][0], CONTINENTS[i]));
 	}
 
 	vector<Country*> newCountries(map.GetCountries());
@@ -156,7 +167,7 @@ void assignCountries()
 
 		// Assign the country to the player
 		//players[i % numberPlayers]->AddCountry(selectedCountry);
-		selectedCountry->setPlayer(players[i % numberPlayers]);
+		selectedCountry->setControllingPlayer(players[i % numberPlayers]);
 	}
 
 	// If there are no extra countries, return
@@ -179,7 +190,7 @@ void assignCountries()
 	for (unsigned i = 0; i < luckPlayers.size(); i++)
 	{
 		//luckPlayers[i]->AddCountry(newCountries[i]);
-		newCountries[i]->setPlayer(luckPlayers[i]);
+		newCountries[i]->setControllingPlayer(luckPlayers[i]);
 	}
 }
 
@@ -219,14 +230,14 @@ void runGame()
 		for (int i = 0; i < numberPlayers; i++)
 		{
 			// If the player is dead, skip their turn
-			/*
-			if (!players[i]->Alive())
+			
+			if (!players[i]->isAlive())
 			{
 				cout << endl << players[i]->GetPlayerName() << " is eliminated" << endl;
 				system("pause");
 				continue;
 			}
-			*/
+			
 
 			// Loop through the phases of the game
 			for (int j = 0; j < NUM_PHASES; j++)
@@ -239,7 +250,7 @@ void runGame()
 					playerReinforce(players[i]);
 					break;
 				case 1:
-					//playerAttack(players[i]);
+					playerAttack(players[i]);
 					break;
 				case 2:
 					playerFortify(players[i]);
@@ -256,12 +267,12 @@ void runGame()
 		int alivePlayers = 0;
 		for (int i = 0; i < numberPlayers; i++)
 		{
-			/*
-			if (players[i]->Alive())
+			
+			if (players[i]->isAlive())
 			{
 				alivePlayers++;
 				winner = players[i]; // This player is in fact the winner since they are the only one that will be alive
-			}*/
+			}
 		}
 
 		gameOver = alivePlayers < 2;
@@ -282,46 +293,122 @@ void playerReinforce(Player* player)
 
 void playerAttack(Player* player)
 {
-	vector<Player*> enemies;
-	for (unsigned i = 0; i < players.size(); i++)
+	bool validCountry = false;
+	Country* playerCountry = NULL;
+	Country* enemyCountry = NULL;
+	while (!validCountry)
 	{
-		// Enemies are alive and not the current player
-		//if (players[i]->Alive() && players[i] != player)
+		string inCountry;
+		cout << "Ever a country to attack with: " << endl;
+		cin >> inCountry;
+
+		playerCountry = map.getCountryByName(inCountry);
+		if (playerCountry)
 		{
-			//enemies.push_back(players[i]);
-		}
-	}
+			if (playerCountry->getOwner() == player)
+			{
+				vector<Country*> adjacentCountries(playerCountry->getAdjacentCountries());
 
-	cout << "Select the player to attack: " << endl;
+				for (unsigned i = 0; i < adjacentCountries.size(); i++)
+				{
+					if (adjacentCountries[i]->getOwner() != player)
+					{
+						validCountry = true;
+						break;
+					}
 
-	// Print out available players to attack
-	for (unsigned i = 0; i < enemies.size(); i++)
-	{
-		//cout << i + 1 << " - " << enemies[i]->GetPlayerName() << " : " << enemies[i]->GetCountries().size() << " countries" << endl;
-	}
-
-	bool numEntered = false;
-	int selectedPlayer = 0;
-
-	// Loop until a valid player id is provided
-	while (!numEntered)
-	{
-		cin >> selectedPlayer;
-
-		if (selectedPlayer > 0 && selectedPlayer <= (int)enemies.size())
-		{
-			numEntered = true;
+					if (i == adjacentCountries.size() - 1)
+					{
+						cout << "You cannot attack any enemies from that country" << endl;
+					}
+				}
+			}
+			else
+			{
+				cout << "You do not control that country" << endl;
+			}
 		}
 		else
 		{
-			cout << "Please specify a player ID between 1 and " << enemies.size() << endl;
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+			cout << "You did not enter a valid country" << endl;
+		}
+	}
+	
+	validCountry = false;
+
+	while (!validCountry)
+	{
+		string inCountry;
+		cout << "Ever a country to attack: " << endl;
+		cin >> inCountry;
+
+		enemyCountry = map.getCountryByName(inCountry);
+
+		if (enemyCountry)
+		{
+			if (enemyCountry->getOwner() == player)
+			{
+				cout << "You cannot attack your own country" << endl;
+				continue;
+			}
+
+			vector<Country*> adjacentCountries(playerCountry->getAdjacentCountries());
+
+			for (unsigned i = 0; i < adjacentCountries.size(); i++)
+			{
+				if (adjacentCountries[i] == enemyCountry)
+				{
+					validCountry = true;
+					break;
+				}
+
+				if (i == adjacentCountries.size() - 1)
+				{
+					cout << "You cannot attack that enemy from your country" << endl;
+				}
+			}
+		}
+		else
+		{
+			cout << "You did not enter a valid country" << endl;
 		}
 	}
 
-	// Attack the selected player
-	//enemies[selectedPlayer - 1]->Attack();
+	Player* enemy = enemyCountry->getOwner();
+	
+	int attackingArmies = playerCountry->getNumArmies();
+	int defendingArmies = enemyCountry->getNumArmies();
+
+	if (attackingArmies > defendingArmies)
+	{
+		enemyCountry->setControllingPlayer(player);
+		map.notifyObservers();
+		cout << "You took over the country!" << endl;
+	}
+	else
+	{
+		playerCountry->setControllingPlayer(enemyCountry->getOwner());
+		map.notifyObservers();
+		cout << "You lost the battle and the enemy has taken over the country!" << endl;
+	}
+
+	checkPlayerAndKill(player);
+	checkPlayerAndKill(enemy);
+}
+
+void checkPlayerAndKill(Player* player)
+{
+	vector<Country*> countries(map.GetCountries());
+	for (unsigned i = 0; i < countries.size(); i++)
+	{
+		if (countries[i]->getOwner() == player)
+		{
+			return;
+		}
+	}
+
+	player->kill();
+	cout << player->GetPlayerName() << " has lost all of their countries" << endl;
 
 }
 
