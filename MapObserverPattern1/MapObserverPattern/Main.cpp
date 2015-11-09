@@ -5,20 +5,23 @@
 #include <algorithm>
 #include "Player.h"
 #include "Country.h"
-#include "Map.h"
+#include "Map.h"	
 #include "MapView.h"
 
 /*
 Michael Bilinsky 26992358
-COMP 345 Assignment #1 - Part 2: Game driver
+COMP 345 Assignment #2 - Part 2: Map Observer Pattern
 
-The shell of a game driver for a Risk game.
-The program asks for a number of players and their names.
-The game has a fixed number of countries.
-Battling and other phases of the game are not yet eliminated.
-Players will win every battle and will randomly destoy one of their enemy's countries.
-Ownership of countries are not transfered, instead countries are permenatly removed for this demo.
-Last player with countries remaining wins.
+From Assignment #1:
+-The gamedriver ask for players
+-Countries are randomly assigned
+
+New in Assignment #2
+-Countries are placed in a map with an observer pattern
+-The map is outputted in a nice table
+-Countries are randomly assigned armies, RISK rules are not yet implemented
+-attack/battle is not implement, instead a player will take over another country if they have more armies
+-moving armies around is not implemented
 */
 
 using namespace std;
@@ -29,7 +32,7 @@ const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
 const int NUM_COUNTRIES = 10;
 
-// Temporary manually entered list of countries
+// Temporary manually entered list of countries and their adjacencies, this will get read from a text file in the final version
 const string MAP_INPUT[][3] = 
 { { "Canada", "USA", "Foolandia" },
 { "Foolandia", "Canada","Iceland" },
@@ -42,19 +45,17 @@ const string MAP_INPUT[][3] =
 { "Egypt", "Mexico", "Australia" },
 { "Iceland", "Foolandia", "UK" } };
 
+// Mapping of the countries to continents, this will get read from a text file in the final version
 const string CONTINENTS[] = { "N. America", "N. America", "N. America", "Europe", "N. America", "Europe","Asia","Oceania", "Africa", "Europe" };
 
-Map map;
-MapView* mapView;
+Map map; // The game map
+MapView* mapView; // The map view component
 
 // Ask for number of players and their names
 void queryPlayers();
 
 // Assign countries to players
 void assignCountries();
-
-// Print out the players and the countries they hold
-//void printCountries();
 
 // Run the game
 void runGame();
@@ -68,10 +69,12 @@ void playerAttack(Player*);
 // Allow the player to perform their fortification move
 void playerFortify(Player*);
 
+// Check if a player has no countries and then kill them
 void checkPlayerAndKill(Player*);
 
 int main()
 {
+	// Setup the map
 	mapView = new MapView(&map);
 
 	cout << "Welcome to the Risk game driver" << endl;
@@ -153,8 +156,6 @@ void assignCountries()
 	// Number of extra countries
 	int numExtraCountries = NUM_COUNTRIES % numberPlayers;
 
-	
-
 	// Randomly and evenly assign countries to players
 	for (int i = 0; i < numFairCountries; i++)
 	{
@@ -194,23 +195,6 @@ void assignCountries()
 	}
 }
 
-/*
-void printCountries()
-{
-	// Print the players and the countries they hold
-	for (unsigned i = 0; i < players.size(); i++)
-	{
-		vector<Country*> playerCountries(players[i]->GetCountries());
-
-		cout << players[i]->GetPlayerName() << " current holds: " << endl;
-
-		for (unsigned j = 0; j < playerCountries.size(); j++)
-		{
-			cout << "     " << playerCountries[j]->GetCountryName() << endl;
-		}
-	}
-}*/
-
 void runGame()
 {
 	bool gameOver = false;
@@ -223,8 +207,6 @@ void runGame()
 		turnNumber++;
 
 		cout << endl << "ROUND " << turnNumber << endl;
-
-		//printCountries();
 
 		// Loop through the players
 		for (int i = 0; i < numberPlayers; i++)
@@ -294,21 +276,26 @@ void playerReinforce(Player* player)
 void playerAttack(Player* player)
 {
 	bool validCountry = false;
+
 	Country* playerCountry = NULL;
 	Country* enemyCountry = NULL;
+
+	// Ask the player for a country to attack with
 	while (!validCountry)
 	{
 		string inCountry;
-		cout << "Ever a country to attack with: " << endl;
+		cout << "Enter a country to attack with: " << endl;
 		cin >> inCountry;
 
 		playerCountry = map.getCountryByName(inCountry);
 		if (playerCountry)
 		{
+			// Check if the player controls that country
 			if (playerCountry->getOwner() == player)
 			{
 				vector<Country*> adjacentCountries(playerCountry->getAdjacentCountries());
 
+				// Make sure there are enemies in the adjacent countries
 				for (unsigned i = 0; i < adjacentCountries.size(); i++)
 				{
 					if (adjacentCountries[i]->getOwner() != player)
@@ -330,12 +317,14 @@ void playerAttack(Player* player)
 		}
 		else
 		{
+			// Country could not be found
 			cout << "You did not enter a valid country" << endl;
 		}
 	}
 	
 	validCountry = false;
 
+	// Ask for a country to attack
 	while (!validCountry)
 	{
 		string inCountry;
@@ -344,8 +333,10 @@ void playerAttack(Player* player)
 
 		enemyCountry = map.getCountryByName(inCountry);
 
+		// Ensure the country is valid
 		if (enemyCountry)
 		{
+			// Ensure the country is an enemy
 			if (enemyCountry->getOwner() == player)
 			{
 				cout << "You cannot attack your own country" << endl;
@@ -354,6 +345,7 @@ void playerAttack(Player* player)
 
 			vector<Country*> adjacentCountries(playerCountry->getAdjacentCountries());
 
+			// Make sure that the player can attack that country from the selected country
 			for (unsigned i = 0; i < adjacentCountries.size(); i++)
 			{
 				if (adjacentCountries[i] == enemyCountry)
@@ -379,6 +371,7 @@ void playerAttack(Player* player)
 	int attackingArmies = playerCountry->getNumArmies();
 	int defendingArmies = enemyCountry->getNumArmies();
 
+	// Very simple attacking logic, if the attacker has more armies they win, else they lose
 	if (attackingArmies > defendingArmies)
 	{
 		enemyCountry->setControllingPlayer(player);
@@ -392,12 +385,15 @@ void playerAttack(Player* player)
 		cout << "You lost the battle and the enemy has taken over the country!" << endl;
 	}
 
+	// Check if any of the players involved have been eliminated
 	checkPlayerAndKill(player);
 	checkPlayerAndKill(enemy);
 }
 
 void checkPlayerAndKill(Player* player)
 {
+	// If the player no longer controls any countries, then kill them
+
 	vector<Country*> countries(map.GetCountries());
 	for (unsigned i = 0; i < countries.size(); i++)
 	{

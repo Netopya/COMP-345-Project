@@ -12,6 +12,8 @@ const vector<Country*> Map::GetCountries() const
 
 Country * Map::getCountryByName(string name) const
 {
+	// Search for a country with the requested name
+
 	for (unsigned i = 0; i < countries.size(); i++)
 	{
 		if (countries[i]->getName() == name)

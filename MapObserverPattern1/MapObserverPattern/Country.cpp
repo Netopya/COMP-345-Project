@@ -4,7 +4,7 @@ Country::Country(string name, string continent)
 {
 	this->name = name;
 	this->continent = continent;
-	numArmies = rand() % 10;
+	numArmies = rand() % 10; // Randomly assign a number of armies
 }
 
 void Country::setControllingPlayer(Player * const & player)
@@ -14,12 +14,12 @@ void Country::setControllingPlayer(Player * const & player)
 
 void Country::addAdjecentCountry(Country * const & country)
 {
-	adjecentCountries.push_back(country);
+	adjacentCountries.push_back(country);
 }
 
 vector<Country*> Country::getAdjacentCountries()
 {
-	return adjecentCountries;
+	return adjacentCountries;
 }
 
 string Country::getName() const

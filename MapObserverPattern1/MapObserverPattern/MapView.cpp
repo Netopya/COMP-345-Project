@@ -19,26 +19,10 @@ void MapView::update(MyObservable* observable)
 	{
 		int n;
 		vector<Country*> countries(map->GetCountries());
-		//string output("|");
-		
 		
 		// TODO: Support more than 2 sets of countries
-		printCountries(countries, 0, countries.size() / 2);
-		printCountries(countries, countries.size() / 2, countries.size());
-
-		/*
-		for (unsigned i = countries.size() / 2; i < countries.size(); i++)
-		{
-			char buffer[100];
-			//printf("|%5s|%5s|%5s|%5s|", arg0, arg1, arg2, arg3);
-			//snprintf(buffer, sizeof(buffer), "%20s|", countries[i]->getName());
-			//output += buffer;
-			cout << left << setw(10) << countries[i]->getName() << '|';
-		}
-
-		cout << endl;
-		*/
-		//cout << output;
+		printCountries(countries, 0, countries.size() / 2); // Print the first 5 countries
+		printCountries(countries, countries.size() / 2, countries.size()); // Print the last 5 countries
 	}
 	
 }
@@ -47,8 +31,8 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 {
 	int leftPadding = 10;
 	int columnWidth = 12;
-	//cout << setw(leftPadding) << " ";
-	//cout << char(201) << std::string(64, 205) << char(187) << endl;
+
+	// Print the upper part of the box frame
 	printColumn(218, 194, 196, 191, end - start, columnWidth, leftPadding);
 
 	for (int j = 0; j < 6; j++)
@@ -82,21 +66,21 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 			switch (j)
 			{
 			case 0:
-				cout << left << setw(columnWidth) << countries[i]->getName() << char(179);
+				cout << left << setw(columnWidth) << countries[i]->getName() << char(179); //Country name
 				break;
 			case 1:
-				cout << left << setw(columnWidth) << countries[i]->getContinent() << char(179);
+				cout << left << setw(columnWidth) << countries[i]->getContinent() << char(179); //Continent name
 				break;
 			case 2:
-				cout << left << setw(columnWidth) << countries[i]->getOwnerName(columnWidth) << char(179);
+				cout << left << setw(columnWidth) << countries[i]->getOwnerName(columnWidth) << char(179); //Owner of the country
 				break;
 			case 3:
-				cout << left << setw(columnWidth) << countries[i]->getNumArmies() << char(179);
+				cout << left << setw(columnWidth) << countries[i]->getNumArmies() << char(179); //number of armies
 				break;
 			case 4:
 			case 5:
 				// TODO: Refactor so that more than 2 adjacent countries are supported
-				cout << left << setw(columnWidth) << countries[i]->getAdjacentCountries()[j - 4]->getName() << char(179);
+				cout << left << setw(columnWidth) << countries[i]->getAdjacentCountries()[j - 4]->getName() << char(179); //Adjacent countries
 				break;
 			}
 		}
@@ -105,26 +89,31 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 
 		if (j < 4)
 		{
-			//cout << setw(leftPadding) << " ";
-			//cout << char(195) << std::string(64, 196) << char(180) << endl;
+			// Print a box section between rows
 			printColumn(195, 197, 196, 180, end - start, columnWidth, leftPadding);
 		}
 	}
 
-	//cout << setw(leftPadding) << " ";
-	//cout << char(200) << std::string(64, 205) << char(188) << endl << endl;
+	// Print the lower part of the box frame
 	printColumn(192, 193, 196, 217, end - start, columnWidth, leftPadding);
 	
 }
 
 void MapView::printColumn(char start, char intersect, char middle, char end, int columns, int width, int padding)
 {
+	// Set the left padding
 	cout << setw(padding) << " ";
+
+	// The leftmost box frame element
 	cout << start;
+
+	// For each column except the last one, fill with the middle character and then place the character that indicated the middle between rows
 	for (int i = 0; i < columns - 1; i++)
 	{
 		cout << std::string(width, middle) << intersect;
 	}
+
+	// Print the last column fill and the rightmost box frame element
 	cout << std::string(width, middle) << end << endl;
 
 
