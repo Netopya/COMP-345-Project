@@ -4,7 +4,9 @@
 #include <time.h>
 #include <algorithm>
 #include "Player.h"
+#include "PlayerView.h"
 #include "Lib.h"
+
 /*
 Michael Bilinsky 26992358
 COMP 345 Assignment #2 - Part 2: Map Observer Pattern
@@ -76,6 +78,7 @@ void addLink();
 void saveMap();
 
 string queryMapFile();
+int requestInt(string question, string errorMessage, int min, int max);
 
 int main()
 {
@@ -87,14 +90,16 @@ int main()
 	if (!(map->getCountries()->size() > 0))
 	{
 		cout << "Could not load map file" << endl;
+		cout << "Error: " << map->getLastErrorMessage() << endl;
 		cout << "Goodbye!" << endl;
 		system("pause");
 		return 1;
 	}
 
 	bool validInput = false;
-	int gameMode = 0;
-	while (!validInput)
+	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map", "Please enter a selection of 1 or 2", 1,2);
+	
+	/*while (!validInput)
 	{
 		cout << "What would you like to do today?" << endl;
 		cout << "1. Play Game" << endl;
@@ -113,7 +118,7 @@ int main()
 			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
 			system("pause");
 		}
-	}
+	}*/
 
 
 	mapView = new MapView(map);
@@ -325,7 +330,10 @@ void queryPlayers()
 {
 	bool numEntered = false;
 
+	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
+
 	// Loop until a valid input is provided
+	/*
 	while (!numEntered)
 	{
 		cout << "Please enter the number of players" << endl;
@@ -344,6 +352,8 @@ void queryPlayers()
 	}
 
 	cin.ignore();
+	*/
+
 
 	// Ask for the player names and use the name to create a new player
 	for (int i = 0; i < numberPlayers; i++)
@@ -351,7 +361,8 @@ void queryPlayers()
 		cout << "Enter the name of player " << i + 1 << endl;
 		string playerName;
 		getline(cin, playerName);
-		Player* newPlayer = new Player(playerName);
+		Player* newPlayer = new Player(playerName, map);
+		PlayerView* playerview = new PlayerView(newPlayer);
 		players.push_back(newPlayer);
 	}
 }
@@ -438,7 +449,6 @@ void runGame()
 		for (int i = 0; i < numberPlayers; i++)
 		{
 			// If the player is dead, skip their turn
-			
 			if (!players[i]->isAlive())
 			{
 				cout << endl << players[i]->GetPlayerName() << " is eliminated" << endl;
@@ -446,10 +456,14 @@ void runGame()
 				continue;
 			}
 			
-
+			
 			// Loop through the phases of the game
 			for (int j = 0; j < NUM_PHASES; j++)
 			{
+				// Display the updated map and player info
+				map->notifyObservers();
+				players[i]->notifyObservers();
+
 				cout << endl << players[i]->GetPlayerName() << " perform your " << PHASES[j] << " move" << endl;
 
 				switch (j)
@@ -496,7 +510,68 @@ void runGame()
 
 void playerReinforce(Player* player)
 {
-	cout << "Reinforcement phase not yet implemented" << endl;
+	vector<Country*> playerCountries;
+
+	for (unsigned i = 0; i < map->getCountries()->size(); i++)
+	{
+		if (map->getCountries()->at(i)->getControllingPlayer() == player)
+		{
+			playerCountries.push_back(map->getCountries()->at(i));
+		}
+	}
+
+	int numReinforcements = min(1, (int)floor(playerCountries.size() / 3));
+
+	while (numReinforcements > 0)
+	{
+		cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
+		cout << "Which country would you like to place some armies on?" << endl;
+
+		string countryName;
+		cin >> countryName;
+
+		Country* country = map->getCountryFromName(countryName.c_str());
+		if (country == NULL)
+		{
+			cout << "The country you entered does not exists" << endl;
+			system("pause");
+		}
+		else if (country->getControllingPlayer() != player)
+		{
+			cout << "You do not countrol that country" << endl;
+			system("pause");
+		}
+		else
+		{
+			bool validInput = false;
+			int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
+			/*
+			while (!validInput)
+			{
+
+				cout << "How many armies would you like to place on " << country->getName() << "?" << endl;
+				cin >> inputArmies;
+
+				if (inputArmies > 0 && inputArmies <= numReinforcements)
+				{
+					validInput = true;
+					cin.ignore();
+				}
+				else
+				{
+					cout << "Please enter a number greater than 0 and less than or equal to " << numReinforcements << endl;
+					cin.clear();
+					cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+				}
+			}*/
+
+			country->addArmies(inputArmies);
+			numReinforcements -= inputArmies;
+		}
+	}
+	
+	
+
 }
 
 void playerAttack(Player* player)
@@ -603,12 +678,14 @@ void playerAttack(Player* player)
 		enemyCountry->setControllingPlayer(player);
 		map->notifyObservers();
 		cout << "You took over the country!" << endl;
+		player->addWin();
 	}
 	else
 	{
 		playerCountry->setControllingPlayer(enemyCountry->getControllingPlayer());
 		map->notifyObservers();
 		cout << "You lost the battle and the enemy has taken over the country!" << endl;
+		enemy->addWin();
 	}
 
 	// Check if any of the players involved have been eliminated
@@ -637,4 +714,107 @@ void checkPlayerAndKill(Player* player)
 void playerFortify(Player* player)
 {
 	cout << "Fortification phase not yet implemented" << endl;
+
+	int fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
+
+	if (fortify == 1)
+	{
+		bool validFortification = false;
+
+		while (!validFortification)
+		{
+			cout << "Which country would you take to take units from?" << endl;
+			string inputCountry;
+			getline(cin, inputCountry);
+			Country* country = map->getCountryFromName(inputCountry.c_str());
+
+			if (country == NULL)
+			{
+				cout << "You did not enter a valid country" << endl;
+			}
+			else if(country->getControllingPlayer() != player)
+			{
+				cout << "You do not control that country" << endl;
+			}
+			else
+			{
+				bool canMove = false;
+
+				for (unsigned i = 0; i < country->getConnectedCountries()->size(); i++)
+				{
+					if (country->getConnectedCountries()->at(i)->getControllingPlayer() == player)
+					{
+						canMove = true;
+						break;
+					}
+				}
+
+				if (!canMove)
+				{
+					cout << "You cannot move to an allied country from that country" << endl;
+				}
+				else
+				{
+					cout << "Which country would you like to move units to?" << endl;
+
+					string inputtoCountry;
+					getline(cin, inputtoCountry);
+					Country* toCountry = map->getCountryFromName(inputtoCountry.c_str());
+
+					if (toCountry == NULL)
+					{
+						cout << "You did not enter a valid country" << endl;
+					}
+					else if (toCountry->getControllingPlayer() != player)
+					{
+						cout << "You do not control that country" << endl;
+					}
+					else if(!map->validPlayerPath(country, toCountry,player))
+					{
+						cout << "There is no path between the two countries" << endl;
+					}
+					else
+					{
+						int armyTransfer = requestInt("How many armies would you like to transfer?", "Please enter a number between 0 and " + country->getNumArmies(), 0, country->getNumArmies());
+
+						country->removeArmies(armyTransfer);
+						toCountry->addArmies(armyTransfer);
+
+						validFortification = true;
+
+						map->notifyObservers();
+					}
+				}
+
+			}
+
+		}
+	}
+
+}
+
+int requestInt(string question, string errorMessage, int min, int max)
+{
+	bool validInput = false;
+	int input;
+	while (!validInput)
+	{
+
+		cout << question << endl;
+		cin >> input;
+
+		if (input >= min && input <= max)
+		{
+			validInput = true;
+			cin.ignore();
+		}
+		else
+		{
+			cout << errorMessage << endl;
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+		}
+	}
+
+	return input;
 }

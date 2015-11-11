@@ -124,6 +124,7 @@
     <ClCompile Include="MapView.cpp" />
     <ClCompile Include="MyObservable.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="MyObservable.h" />
     <ClInclude Include="MyObserver.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerView.h" />
     <ClInclude Include="Reader\Lib.h" />
     <ClInclude Include="Reader\Reader.h" />
     <ClInclude Include="s32data\Lib.h" />

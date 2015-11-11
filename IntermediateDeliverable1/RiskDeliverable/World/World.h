@@ -185,6 +185,11 @@ public:
 		return countriesVector;
 	}
 
+	vector<Continent*>* getContinents()
+	{
+		return continentsVector;
+	}
+
 	Continent* getContinentFromName(const char* _name)
 	{
 		for (int i = 0; i < continentsVector->size(); i++)
@@ -199,8 +204,52 @@ public:
 				return countriesVector->at(i);
 		return NULL;
 	}
+
+	bool validPlayerPath(Country* from, Country* to, Player* player)
+	{
+		vector<Country*>* visited = new vector<Country*>();
+		visited->push_back(from);
+		bool valid = validPlayerPath(*(from->getConnectedCountries()), visited, to, player);
+		delete visited;
+		return valid;
+	}
+
 private:
-	
+	bool validPlayerPath(vector<Country*> investigate, vector<Country*>* visited, Country* goal, Player* player)
+	{
+		for (unsigned int i = 0; i < investigate.size(); i++)
+		{
+
+			if (investigate[i] == goal)
+			{
+				return true;
+			}
+			else if (investigate[i]->getControllingPlayer() != player)
+			{
+				continue;
+			}
+
+			bool bvisited = false;
+			for (unsigned int j = 0; j < visited->size(); j++)
+			{
+				if (visited->at(j) == investigate[i])
+				{
+					bvisited = true;
+					break;
+				}
+			}
+
+			if (bvisited)
+			{
+				visited->push_back(investigate[i]);
+				validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+			}
+
+
+		}
+
+		return false;
+	}
 
 	/*
 	 * Returns true if it has successfully loaded all the lines from _inputFile

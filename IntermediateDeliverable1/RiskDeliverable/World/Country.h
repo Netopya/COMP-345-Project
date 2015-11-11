@@ -31,6 +31,7 @@ public:
 		continent = NULL;
 		name = _name;
 		registryValue = _registryValue;
+		numArmies = 0;
 	}
 	void setCartesian(int _positionX, int _positionY)
 	{
@@ -97,6 +98,16 @@ public:
 	int getNumArmies() const
 	{
 		return numArmies;
+	}
+
+	void addArmies(int armies)
+	{
+		numArmies += armies;
+	}
+
+	void removeArmies(int armies)
+	{
+		numArmies -= armies;
 	}
 
 };
