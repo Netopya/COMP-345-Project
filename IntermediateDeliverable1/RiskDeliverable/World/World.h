@@ -207,6 +207,7 @@ public:
 
 	bool validPlayerPath(Country* from, Country* to, Player* player)
 	{
+		// Perform a recursive Depth First Search to determine if there is a valid path
 		vector<Country*>* visited = new vector<Country*>();
 		visited->push_back(from);
 		bool valid = validPlayerPath(*(from->getConnectedCountries()), visited, to, player);
@@ -219,14 +220,13 @@ private:
 	{
 		for (unsigned int i = 0; i < investigate.size(); i++)
 		{
-
 			if (investigate[i] == goal)
 			{
-				return true;
+				return true; // We've found the requested country
 			}
 			else if (investigate[i]->getControllingPlayer() != player)
 			{
-				continue;
+				continue; //Ignore countries not owned by the player
 			}
 
 			bool bvisited = false;
@@ -239,13 +239,12 @@ private:
 				}
 			}
 
-			if (bvisited)
+			// If we haven't checkout this country, add it to the list of visited countries and investigate its adjacent countries
+			if (!bvisited)
 			{
 				visited->push_back(investigate[i]);
-				validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+				return validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
 			}
-
-
 		}
 
 		return false;

@@ -18,8 +18,8 @@ class Country
 	//Linked countries.
 	vector<Country*>* connectedCountries;
 
-	Player* owner;
-	int numArmies;
+	Player* owner; //Controlling player
+	int numArmies; //Number of armies
 
 public:
 	Country(const char* _name, int _registryValue)

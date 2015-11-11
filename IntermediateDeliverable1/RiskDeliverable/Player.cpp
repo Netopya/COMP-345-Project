@@ -81,7 +81,7 @@ vector<Continent*> Player::getContinents()
 		{
 			if (map->getCountries()->at(j)->getContinent() == map->getContinents()->at(i) && map->getCountries()->at(j)->getControllingPlayer() != this)
 			{
-				continentOwned = false;
+				continentOwned = false; //If the player doesn't control a country on this continent, then they don't control the continent
 				break;
 			}
 		}

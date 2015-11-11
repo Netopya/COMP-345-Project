@@ -9,18 +9,20 @@
 
 /*
 Michael Bilinsky 26992358
-COMP 345 Assignment #2 - Part 2: Map Observer Pattern
+Mina Abdel Malek 26951791
+Maxime Morin 27501455
 
-From Assignment #1:
--The gamedriver ask for players
--Countries are randomly assigned
+COMP 345 Project Intermediate Build
 
-New in Assignment #2
--Countries are placed in a map with an observer pattern
--The map is outputted in a nice table
--Countries are randomly assigned armies, RISK rules are not yet implemented
--attack/battle is not implement, instead a player will take over another country if they have more armies
--moving armies around is not implemented
+-A game of classic risk
+-Can load map from a file
+-Can add countries and continents from a map editor
+-Can save new maps
+-Can play through the reinforement, attack, and fortification phases of the game
+-Attacking is in a simplified form (no dice implemented)
+-Cards are not yet implemented
+
+See README.txt for Visual Studio compilation information
 */
 
 using namespace std;
@@ -30,22 +32,6 @@ vector<Player*> players; // List of players
 const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
 int num_Countries;
-
-// Temporary manually entered list of countries and their adjacencies, this will get read from a text file in the final version
-const string MAP_INPUT[][3] = 
-{ { "Canada", "USA", "Foolandia" },
-{ "Foolandia", "Canada","Iceland" },
-{ "USA", "Canada", "Mexico" },
-{ "UK", "Ukraine", "Iceland" },
-{ "Mexico", "USA", "Egypt" },
-{ "Ukraine", "UK", "China" },
-{ "China", "Ukraine", "Australia" },
-{ "Australia", "Egypt", "China" },
-{ "Egypt", "Mexico", "Australia" },
-{ "Iceland", "Foolandia", "UK" } };
-
-// Mapping of the countries to continents, this will get read from a text file in the final version
-const string CONTINENTS[] = { "N. America", "N. America", "N. America", "Europe", "N. America", "Europe","Asia","Oceania", "Africa", "Europe" };
 
 World* map;
 MapView* mapView; // The map view component
@@ -71,13 +57,15 @@ void playerFortify(Player*);
 // Check if a player has no countries and then kill them
 void checkPlayerAndKill(Player*);
 
-void mapEditor();
-void addCountry();
-void addContinent();
-void addLink();
-void saveMap();
+void mapEditor();	// Run the map editor
+void addCountry();	// Add a country
+void addContinent();// Add a continent
+void addLink();		// Add links between countries
+void saveMap();		// Save the map to a file
 
-string queryMapFile();
+string queryMapFile(); //Ask for the map file to load
+
+// Request an integer from the user, showing an error message until they enter a valid number within the bounds
 int requestInt(string question, string errorMessage, int min, int max);
 
 int main()
@@ -87,6 +75,7 @@ int main()
 	// Setup the map
 	map = new World(queryMapFile().c_str());
 
+	// Check if the map was correctly loaded
 	if (!(map->getCountries()->size() > 0))
 	{
 		cout << "Could not load map file" << endl;
@@ -96,34 +85,12 @@ int main()
 		return 1;
 	}
 
-	bool validInput = false;
-	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map", "Please enter a selection of 1 or 2", 1,2);
-	
-	/*while (!validInput)
-	{
-		cout << "What would you like to do today?" << endl;
-		cout << "1. Play Game" << endl;
-		cout << "2. Edit Map" << endl;
-		cin >> gameMode;
-
-		if (gameMode > 0 && gameMode < 3)
-		{
-			validInput = true;
-			cin.ignore();
-		}
-		else
-		{
-			cout << "Please enter a selection of 1 or 2" << endl;
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
-			system("pause");
-		}
-	}*/
-
-
+	// Setup the map view
 	mapView = new MapView(map);
 
-	num_Countries = map->getCountries()->size();
+	// Ask for the game mode
+	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map", "Please enter a selection of 1 or 2", 1,2);
+	
 
 	if (gameMode == 2)
 	{
@@ -131,10 +98,15 @@ int main()
 	}
 	else
 	{
+		// else run the normal game
+
 		cout << "Welcome to the Risk game" << endl;
 
 		// Randomize the random number generator using the current time as a seed
 		srand(time(NULL));
+
+		// Setup the number of countries
+		num_Countries = map->getCountries()->size();
 
 		queryPlayers();
 
@@ -144,6 +116,7 @@ int main()
 
 		runGame();
 	}
+
 	cout << endl << "The game has stopped running" << endl;
 	system("pause");
 	return 0;
@@ -151,6 +124,7 @@ int main()
 
 string queryMapFile()
 {
+	// ask for a file name
 	string filename;
 	cout << "Enter the name of the map file to load" << endl;
 	cin >> filename;
@@ -172,7 +146,7 @@ void mapEditor()
 		cout << "1. Add country" << endl;
 		cout << "2. Add continent" << endl;
 		cout << "3. Add link between countries" << endl;
-		cout << "4. Save changes" << endl; // Check that link was added
+		cout << "4. Save changes" << endl;
 		cout << "5. Exit" << endl;
 
 		int choice;
@@ -214,6 +188,8 @@ void mapEditor()
 
 void addCountry()
 {
+	// Ask for a country and the continent to put it on
+
 	string* countryName = new string();
 	string continentName;
 	cout << "What is the name of the new country?" << endl;
@@ -221,8 +197,6 @@ void addCountry()
 
 	cout << "On which continent is this country located?" << endl;
 	getline(cin, continentName);
-
-	
 
 	bool success = map->addCountry(countryName->c_str(), continentName.c_str());
 
@@ -235,6 +209,8 @@ void addCountry()
 
 void addContinent()
 {
+	// Ask for the name of a new continent
+
 	string* continentName = new string();
 	cout << "What is the name of the new continent?" << endl;
 	getline(cin, *continentName);
@@ -249,6 +225,7 @@ void addContinent()
 
 void addLink()
 {
+	// Ask for the inital country from which the links will stem
 	string countryName;
 	cout << "Which country would you like to add links to?" << endl;
 	getline(cin, countryName);
@@ -256,6 +233,7 @@ void addLink()
 	bool validInput = false;
 	int numLinks = 0;
 
+	// Loop until a valid input is received for the number of links to add
 	while (!validInput)
 	{
 		cout << "How many links would you like to add to " << countryName << endl;
@@ -277,6 +255,7 @@ void addLink()
 
 	vector<const char*>* placesToLink = new vector<const char*>();
 
+	// Ask for the name of the country for each of the links
 	for (int i = 0; i < numLinks; i++)
 	{
 		cout << "Enter the name of linked country #" << (i + 1) << endl;
@@ -285,6 +264,7 @@ void addLink()
 		placesToLink->push_back(inputCountry->c_str());
 	}
 
+	// Add the links in the map
 	bool success = map->addLink(countryName.c_str(), placesToLink);
 
 	if (!success)
@@ -300,6 +280,7 @@ void saveMap()
 {
 	bool mapValid = true;
 
+	// Make sure that all the countries have at least one link to another country
 	for (unsigned i = 0; i < map->getCountries()->size(); i++)
 	{
 		if (map->getCountries()->at(i)->getConnectedCountries()->size() < 1)
@@ -316,12 +297,13 @@ void saveMap()
 	}
 	else
 	{
-		
+		// Ask for a file name
 		string filename;
 		cout << "Enter the name of the new file" << endl;
 		cin >> filename;
 		filename += ".map";
 
+		// Save the file
 		map->toFile(filename.c_str());
 	}
 }
@@ -331,29 +313,6 @@ void queryPlayers()
 	bool numEntered = false;
 
 	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
-
-	// Loop until a valid input is provided
-	/*
-	while (!numEntered)
-	{
-		cout << "Please enter the number of players" << endl;
-		cin >> numberPlayers;
-
-		if (numberPlayers > 1 && numberPlayers <= num_Countries)
-		{
-			numEntered = true;
-		}
-		else
-		{
-			cout << "Please specify between 2 and " << num_Countries << " players" << endl;
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
-		}
-	}
-
-	cin.ignore();
-	*/
-
 
 	// Ask for the player names and use the name to create a new player
 	for (int i = 0; i < numberPlayers; i++)
@@ -369,23 +328,7 @@ void queryPlayers()
 
 void assignCountries()
 {
-	
-	//for (int i = 0; i < NUM_COUNTRIES; i++)
-	{
-		// Create the countries
-		//map.addCountry(new Country(MAP_INPUT[i][0], CONTINENTS[i]));
-	}
-
 	vector<Country*> newCountries = *(map->getCountries());
-
-	//for (int i = 0; i < NUM_COUNTRIES; i++)
-	{
-		for (int j = 1; j < 3; j++)
-		{
-			//newCountries[i]->addAdjecentCountry(map.getCountryByName(MAP_INPUT[i][j]));
-		}
-	}
-
 
 	// Number of countries that can be evenly distributed
 	int numFairCountries = (num_Countries / numberPlayers) * numberPlayers;
@@ -479,9 +422,7 @@ void runGame()
 					break;
 				}
 
-
 				system("pause");
-
 			}
 		}
 
@@ -489,7 +430,6 @@ void runGame()
 		int alivePlayers = 0;
 		for (int i = 0; i < numberPlayers; i++)
 		{
-			
 			if (players[i]->isAlive())
 			{
 				alivePlayers++;
@@ -512,6 +452,7 @@ void playerReinforce(Player* player)
 {
 	vector<Country*> playerCountries;
 
+	// Get all the countries that the player owns
 	for (unsigned i = 0; i < map->getCountries()->size(); i++)
 	{
 		if (map->getCountries()->at(i)->getControllingPlayer() == player)
@@ -520,10 +461,13 @@ void playerReinforce(Player* player)
 		}
 	}
 
-	int numReinforcements = min(1, (int)floor(playerCountries.size() / 3));
+	// Get the number of reinforcements (atleast 1 army)
+	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
 
+	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
 	{
+		// Ask for a country to place armies on and ensure it is a valid choice
 		cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
 		cout << "Which country would you like to place some armies on?" << endl;
 
@@ -545,33 +489,14 @@ void playerReinforce(Player* player)
 		{
 			bool validInput = false;
 			int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
-			/*
-			while (!validInput)
-			{
-
-				cout << "How many armies would you like to place on " << country->getName() << "?" << endl;
-				cin >> inputArmies;
-
-				if (inputArmies > 0 && inputArmies <= numReinforcements)
-				{
-					validInput = true;
-					cin.ignore();
-				}
-				else
-				{
-					cout << "Please enter a number greater than 0 and less than or equal to " << numReinforcements << endl;
-					cin.clear();
-					cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
-				}
-			}*/
-
+			
+			// Add the reinforcements to the country
 			country->addArmies(inputArmies);
+
+			// Remove the armies from available reinforcements
 			numReinforcements -= inputArmies;
 		}
 	}
-	
-	
-
 }
 
 void playerAttack(Player* player)
@@ -713,17 +638,17 @@ void checkPlayerAndKill(Player* player)
 
 void playerFortify(Player* player)
 {
-	cout << "Fortification phase not yet implemented" << endl;
-
 	int fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
 
 	if (fortify == 1)
 	{
 		bool validFortification = false;
 
+		// Loop until the user has properly setup a fortification move
 		while (!validFortification)
 		{
-			cout << "Which country would you take to take units from?" << endl;
+			// Ask for the country to move units from
+			cout << "Which country would you like to take units from?" << endl;
 			string inputCountry;
 			getline(cin, inputCountry);
 			Country* country = map->getCountryFromName(inputCountry.c_str());
@@ -740,6 +665,7 @@ void playerFortify(Player* player)
 			{
 				bool canMove = false;
 
+				// Quickly check if the user can even move out of the currently selected country
 				for (unsigned i = 0; i < country->getConnectedCountries()->size(); i++)
 				{
 					if (country->getConnectedCountries()->at(i)->getControllingPlayer() == player)
@@ -755,6 +681,7 @@ void playerFortify(Player* player)
 				}
 				else
 				{
+					// Ask for the country to move units to
 					cout << "Which country would you like to move units to?" << endl;
 
 					string inputtoCountry;
@@ -769,7 +696,7 @@ void playerFortify(Player* player)
 					{
 						cout << "You do not control that country" << endl;
 					}
-					else if(!map->validPlayerPath(country, toCountry,player))
+					else if(!map->validPlayerPath(country, toCountry, player))
 					{
 						cout << "There is no path between the two countries" << endl;
 					}
@@ -777,6 +704,7 @@ void playerFortify(Player* player)
 					{
 						int armyTransfer = requestInt("How many armies would you like to transfer?", "Please enter a number between 0 and " + country->getNumArmies(), 0, country->getNumArmies());
 
+						// Remove the armies from the "from" country and move them to the "to" country
 						country->removeArmies(armyTransfer);
 						toCountry->addArmies(armyTransfer);
 
@@ -797,9 +725,11 @@ int requestInt(string question, string errorMessage, int min, int max)
 {
 	bool validInput = false;
 	int input;
+
+	// Loop until a valid input is received
 	while (!validInput)
 	{
-
+		// Ask user for input
 		cout << question << endl;
 		cin >> input;
 
@@ -810,6 +740,7 @@ int requestInt(string question, string errorMessage, int min, int max)
 		}
 		else
 		{
+			// Show error message
 			cout << errorMessage << endl;
 			cin.clear();
 			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input

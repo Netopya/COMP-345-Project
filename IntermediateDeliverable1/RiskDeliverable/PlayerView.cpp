@@ -16,6 +16,7 @@ void PlayerView::update(MyObservable* observable)
 
 	if (player)
 	{
+		//Display player information
 		cout << "Player name: " << player->GetPlayerName() << endl;
 		cout << "Number of armies: " << player->getNumArmies() << endl;
 		cout << "Number of battles one: " << player->getNumWins() << endl;

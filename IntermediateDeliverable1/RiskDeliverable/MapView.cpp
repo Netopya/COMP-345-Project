@@ -20,6 +20,7 @@ void MapView::update(MyObservable* observable)
 	
 	if (map)
 	{
+		// Calculate the number of rows
 		int n;
 		vector<Country*> countries(*(map->getCountries()));
 		int numCountries = countries.size();
@@ -27,11 +28,9 @@ void MapView::update(MyObservable* observable)
 
 		for (int i = 0; i < rows; i++)
 		{
+			// calculate the number of columns, usually max except at the last column
 			printCountries(countries, i * MAX_COLUMNS, min((i+1) * MAX_COLUMNS, numCountries));
 		}
-		// TODO: Support more than 2 sets of countries
-		//printCountries(countries, 0, countries.size() / 2); // Print the first 5 countries
-		//printCountries(countries, countries.size() / 2, countries.size()); // Print the last 5 countries
 	}
 	
 }
@@ -51,6 +50,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 
 	int maxNumAdjacentCountries = 0;
 
+	// Calculate the maximum number of adjacent countries out of all the countries in this row
 	for (int i = start; i < end; i++)
 	{
 		if (countries[i]->getConnectedCountries()->size() > maxNumAdjacentCountries)
@@ -64,7 +64,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 	{
 		if (editorMode && j > 1 && j < 4)
 		{
-			continue;
+			continue; // Don't show all the information if in the map editor
 		}
 
 		switch(j)
@@ -115,11 +115,11 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 			{
 				if ((j - 4) < countries[i]->getConnectedCountries()->size())
 				{
-					// TODO: Refactor so that more than 2 adjacent countries are supported
 					cout << left << setw(columnWidth) << truncateChar((*(countries[i]->getConnectedCountries()))[j - 4]->getName(), columnWidth) << char(179); //Adjacent countries
 				}
 				else
 				{
+					// Print empty space if the country has no more adjacent countries to print out
 					cout << left << setw(columnWidth) << std::string(columnWidth, ' ') << char(179);
 				}
 				
@@ -128,7 +128,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 
 		cout << endl;
 
-		if (j < 4)
+		if (j < 4) // Not between adjacent countries
 		{
 			// Print a box section between rows
 			printColumn(195, 197, 196, 180, end - start, columnWidth, leftPadding);

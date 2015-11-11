@@ -1,10 +1,7 @@
 #pragma once
 
 /*
-Michael Bilinsky 26992358
-COMP 345 Assignment #2 - Part 2: Map Observer Pattern
-
-Player in the game, they have a name and an alive status
+Player in the game, they have a name, an alive status, and a number of wins along with methods to determine controlled armies, countries, and continents
 */
 
 #include <string>
@@ -30,6 +27,6 @@ public:
 	int getNumArmies();
 	int getNumWins() const;
 	void addWin();
-	vector<class Country*> getCountries();
-	vector<class Continent*> getContinents();
+	vector<class Country*> getCountries(); // Get controlled countries
+	vector<class Continent*> getContinents(); // Get controlled continents
 };
