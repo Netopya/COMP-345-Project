@@ -136,6 +136,16 @@
     <ClInclude Include="MyObserver.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerView.h" />
+    <ClInclude Include="Reader\Lib.h" />
+    <ClInclude Include="Reader\Reader.h" />
+    <ClInclude Include="s32data\Lib.h" />
+    <ClInclude Include="World\Continent.h" />
+    <ClInclude Include="World\Country.h" />
+    <ClInclude Include="World\Lib.h" />
+    <ClInclude Include="World\World.h" />
+    <ClInclude Include="Writer\Functions.h" />
+    <ClInclude Include="Writer\Lib.h" />
+    <ClInclude Include="Writer\Writer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

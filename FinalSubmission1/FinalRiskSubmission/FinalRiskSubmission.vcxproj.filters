@@ -47,6 +47,36 @@
     <ClInclude Include="PlayerView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Reader\Lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader\Reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="s32data\Lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Continent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Country.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Writer\Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Writer\Lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Writer\Writer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
