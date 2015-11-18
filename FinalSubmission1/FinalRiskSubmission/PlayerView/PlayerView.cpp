@@ -1,9 +1,4 @@
-#include <iostream>
 #include "PlayerView.h"
-#include "MyObservable.h"
-#include "Player.h"
-#include "World\Country.h"
-#include "World\Continent.h"
 
 PlayerView::PlayerView(MyObservable* const& observable)
 {
@@ -16,7 +11,7 @@ void PlayerView::update(MyObservable* observable)
 
 	if (player)
 	{
-		//Display player information
+		//Display player information.
 		cout << "Player name: " << player->GetPlayerName() << endl;
 		cout << "Number of armies: " << player->getNumArmies() << endl;
 		cout << "Number of battles one: " << player->getNumWins() << endl;

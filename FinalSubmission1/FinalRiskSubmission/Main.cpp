@@ -3,9 +3,11 @@
 #include <vector>
 #include <time.h>
 #include <algorithm>
-#include "Player.h"
-#include "PlayerView.h"
-#include "Lib.h"
+#include "World\World.h"
+#include "MapView\MapView.h"
+#include "PlayerView\PlayerView.h"
+
+using namespace std;
 
 /*
 Michael Bilinsky 26992358
@@ -24,8 +26,6 @@ COMP 345 Project Intermediate Build
 
 See README.txt for Visual Studio compilation information
 */
-
-using namespace std;
 
 int numberPlayers; // Number of players
 vector<Player*> players; // List of players
@@ -103,10 +103,10 @@ int main()
 		cout << "Welcome to the Risk game" << endl;
 
 		// Randomize the random number generator using the current time as a seed
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 
 		// Setup the number of countries
-		num_Countries = map->getCountries()->size();
+		num_Countries = (int)map->getCountries()->size();
 
 		queryPlayers();
 
@@ -128,7 +128,7 @@ string queryMapFile()
 	string filename;
 	cout << "Enter the name of the map file to load" << endl;
 	cin >> filename;
-	return filename;
+	return "MapRessourceFiles\\" + filename;
 }
 
 void mapEditor()

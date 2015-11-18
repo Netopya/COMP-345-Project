@@ -1,8 +1,4 @@
-#include <iostream>
 #include "Player.h"
-#include "World\World.h"
-
-using namespace std;
 
 Player::Player(string playerName, World* map)
 {
@@ -22,7 +18,7 @@ string Player::GetPlayerName(int max)
 	return playerName.substr(0, max);
 }
 
-const bool Player::isAlive()
+bool Player::isAlive()
 {
 	return alive;
 }
@@ -81,7 +77,7 @@ vector<Continent*> Player::getContinents()
 		{
 			if (map->getCountries()->at(j)->getContinent() == map->getContinents()->at(i) && map->getCountries()->at(j)->getControllingPlayer() != this)
 			{
-				continentOwned = false; //If the player doesn't control a country on this continent, then they don't control the continent
+				continentOwned = false; //If the player doesn't control a country on this continent, then they don't control the continent.
 				break;
 			}
 		}

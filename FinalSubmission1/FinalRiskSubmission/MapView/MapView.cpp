@@ -1,9 +1,4 @@
 #include "MapView.h"
-#include "World/World.h"
-#include "MyObservable.h"
-#include <iostream>
-#include <iomanip>
-#include <math.h>
 
 MapView::MapView(MyObservable* const& observable)
 {
@@ -20,17 +15,14 @@ void MapView::update(MyObservable* observable)
 	
 	if (map)
 	{
-		// Calculate the number of rows
-		int n;
+		//Calculates the number of rows.
 		vector<Country*> countries(*(map->getCountries()));
-		int numCountries = countries.size();
-		int rows = ceil(numCountries / (float)MAX_COLUMNS);
+		size_t numCountries = countries.size();
+		int rows = (int)ceil(numCountries / (float)MAX_COLUMNS);
 
+		//Calculate the number of columns, usually max except at the last column.
 		for (int i = 0; i < rows; i++)
-		{
-			// calculate the number of columns, usually max except at the last column
-			printCountries(countries, i * MAX_COLUMNS, min((i+1) * MAX_COLUMNS, numCountries));
-		}
+			printCountries(countries, i * MAX_COLUMNS, min((i + 1) * MAX_COLUMNS, (int)numCountries));
 	}
 	
 }
@@ -45,17 +37,17 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 	int leftPadding = 10;
 	int columnWidth = 12;
 
-	// Print the upper part of the box frame
+	//Print the upper part of the box frame.
 	printColumn(218, 194, 196, 191, end - start, columnWidth, leftPadding);
 
 	int maxNumAdjacentCountries = 0;
 
-	// Calculate the maximum number of adjacent countries out of all the countries in this row
+	//Calculate the maximum number of adjacent countries out of all the countries in this row.
 	for (int i = start; i < end; i++)
 	{
 		if (countries[i]->getConnectedCountries()->size() > maxNumAdjacentCountries)
 		{
-			maxNumAdjacentCountries = countries[i]->getConnectedCountries()->size();
+			maxNumAdjacentCountries = (int)countries[i]->getConnectedCountries()->size();
 		}
 	}
 
@@ -64,7 +56,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 	{
 		if (editorMode && j > 1 && j < 4)
 		{
-			continue; // Don't show all the information if in the map editor
+			continue; //Don't show all the information if in the map editor.
 		}
 
 		switch(j)
@@ -98,16 +90,16 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 			switch (j)
 			{
 			case 0:
-				cout << left << setw(columnWidth) << truncateChar(countries[i]->getName(), columnWidth) << char(179); //Country name
+				cout << left << setw(columnWidth) << truncateChar(countries[i]->getName(), columnWidth) << char(179); //Country name.
 				break;
 			case 1:
-				cout << left << setw(columnWidth) << truncateChar(countries[i]->getContinent()->getName(), columnWidth) << char(179); //Continent name
+				cout << left << setw(columnWidth) << truncateChar(countries[i]->getContinent()->getName(), columnWidth) << char(179); //Continent name.
 				break;
 			case 2:
-				cout << left << setw(columnWidth) << countries[i]->getControllingPlayer()->GetPlayerName(columnWidth) << char(179); //Owner of the country
+				cout << left << setw(columnWidth) << countries[i]->getControllingPlayer()->GetPlayerName(columnWidth) << char(179); //Owner of the country.
 				break;
 			case 3:
-				cout << left << setw(columnWidth) << countries[i]->getNumArmies() << char(179); //number of armies
+				cout << left << setw(columnWidth) << countries[i]->getNumArmies() << char(179); //Number of armies.
 				break;
 			}
 
@@ -119,7 +111,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 				}
 				else
 				{
-					// Print empty space if the country has no more adjacent countries to print out
+					//Print empty space if the country has no more adjacent countries to print out.
 					cout << left << setw(columnWidth) << std::string(columnWidth, ' ') << char(179);
 				}
 				
@@ -128,34 +120,32 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 
 		cout << endl;
 
-		if (j < 4) // Not between adjacent countries
+		if (j < 4) //Not between adjacent countries.
 		{
-			// Print a box section between rows
+			//Print a box section between rows.
 			printColumn(195, 197, 196, 180, end - start, columnWidth, leftPadding);
 		}
 	}
 
-	// Print the lower part of the box frame
+	//Print the lower part of the box frame.
 	printColumn(192, 193, 196, 217, end - start, columnWidth, leftPadding);
 	
 }
 
-void MapView::printColumn(char start, char intersect, char middle, char end, int columns, int width, int padding)
+void MapView::printColumn(int start, int intersect, int middle, int end, int columns, int width, int padding)
 {
-	// Set the left padding
+	//Set the left padding.
 	cout << setw(padding) << " ";
 
-	// The leftmost box frame element
-	cout << start;
+	//The leftmost box frame element.
+	cout << (char)start;
 
-	// For each column except the last one, fill with the middle character and then place the character that indicated the middle between rows
+	//For each column except the last one, fill with the middle character and then place the character that indicated the middle between rows.
 	for (int i = 0; i < columns - 1; i++)
-	{
-		cout << std::string(width, middle) << intersect;
-	}
+		cout << std::string(width, (char)middle) << (char)intersect;
 
-	// Print the last column fill and the rightmost box frame element
-	cout << std::string(width, middle) << end << endl;
+	//Print the last column fill and the rightmost box frame element.
+	cout << std::string(width, (char)middle) << (char)end << endl;
 
 
 }

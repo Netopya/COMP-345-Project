@@ -118,41 +118,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include=".map" />
-    <None Include="americas.map" />
-    <None Include="mainmap.map" />
-    <None Include="reek.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="AnotherWholeNewWorld.txt" />
+    <Text Include="MapRessourceFiles\AnotherWholeNewWorld.txt" />
+    <Text Include="MapRessourceFiles\World.txt" />
     <Text Include="README.txt" />
-    <Text Include="World.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="Lib.h" />
-    <ClInclude Include="MapView.h" />
-    <ClInclude Include="MyObservable.h" />
-    <ClInclude Include="MyObserver.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerView.h" />
-    <ClInclude Include="Reader\Lib.h" />
+    <ClInclude Include="MapView\MapView.h" />
+    <ClInclude Include="MyObservable\MyObservable.h" />
+    <ClInclude Include="MyObservable\MyObserver.h" />
+    <ClInclude Include="PlayerView\PlayerView.h" />
+    <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Reader\Reader.h" />
-    <ClInclude Include="s32data\Lib.h" />
     <ClInclude Include="World\Continent.h" />
     <ClInclude Include="World\Country.h" />
-    <ClInclude Include="World\Lib.h" />
     <ClInclude Include="World\World.h" />
-    <ClInclude Include="Writer\Functions.h" />
-    <ClInclude Include="Writer\Lib.h" />
     <ClInclude Include="Writer\Writer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MapView.cpp" />
-    <ClCompile Include="MyObservable.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerView.cpp" />
+    <ClCompile Include="MapView\MapView.cpp" />
+    <ClCompile Include="MyObservable\MyObservable.cpp" />
+    <ClCompile Include="PlayerView\PlayerView.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Reader\Reader.cpp" />
+    <ClCompile Include="World\Continent.cpp" />
+    <ClCompile Include="World\Country.cpp" />
+    <ClCompile Include="World\World.cpp" />
+    <ClCompile Include="Writer\Writer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MapRessourceFiles\americas.map" />
+    <None Include="MapRessourceFiles\mainmap.map" />
+    <None Include="MapRessourceFiles\reek.map" />
+    <None Include="MapRessourceFiles\test.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

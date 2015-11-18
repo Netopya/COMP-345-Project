@@ -13,47 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Maps">
+      <UniqueIdentifier>{84c278de-f3de-4ac6-a746-fc901ae4c69e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".map" />
-    <None Include="americas.map" />
-    <None Include="mainmap.map" />
-    <None Include="reek.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="AnotherWholeNewWorld.txt" />
-    <Text Include="README.txt" />
-    <Text Include="World.txt" />
+    <Text Include="MapRessourceFiles\World.txt">
+      <Filter>Maps</Filter>
+    </Text>
+    <Text Include="MapRessourceFiles\AnotherWholeNewWorld.txt">
+      <Filter>Maps</Filter>
+    </Text>
+    <Text Include="README.txt">
+      <Filter>Maps</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MapView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyObservable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyObserver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Reader\Lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Reader\Reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="s32data\Lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="World\Continent.h">
@@ -62,19 +41,25 @@
     <ClInclude Include="World\Country.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="World\Lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="World\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Writer\Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Writer\Lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Writer\Writer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapView\MapView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyObservable\MyObservable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyObservable\MyObserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerView\PlayerView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -82,17 +67,46 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapView.cpp">
+    <ClCompile Include="MapView\MapView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyObservable.cpp">
+    <ClCompile Include="MyObservable\MyObservable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Player\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerView.cpp">
+    <ClCompile Include="PlayerView\PlayerView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Reader\Reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Writer\Writer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Continent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Country.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MapRessourceFiles\americas.map">
+      <Filter>Maps</Filter>
+    </None>
+    <None Include="MapRessourceFiles\mainmap.map">
+      <Filter>Maps</Filter>
+    </None>
+    <None Include="MapRessourceFiles\reek.map">
+      <Filter>Maps</Filter>
+    </None>
+    <None Include="MapRessourceFiles\test.map">
+      <Filter>Maps</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
-#pragma once
+#ifndef EXCEPTION_H
+#define EXCEPTION_H
 
-class fileNotGood : public exception
+class fileNotGood : public std::exception
 {
 public:
 	virtual const char* what() const throw()
@@ -9,7 +10,7 @@ public:
 	}
 } const fng;
 
-class FormatSyntax : public exception
+class FormatSyntax : public std::exception
 {
 public:
 	virtual const char* what() const throw()
@@ -18,7 +19,7 @@ public:
 	}
 } const fs;
 
-class DataNotGood : public exception
+class DataNotGood : public std::exception
 {
 public:
 	virtual const char* what() const throw()
@@ -26,3 +27,4 @@ public:
 		return "Data not good exception.";
 	}
 } const dng;
+#endif
