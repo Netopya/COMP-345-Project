@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MapView">
+      <UniqueIdentifier>{d9fe66f5-c795-4589-990b-00a135bc4f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyObserver">
+      <UniqueIdentifier>{39cd7eef-bf85-4b4f-be0c-9ad6a8a1b5a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{611374be-a205-4212-ac31-4d7bbb5b46dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayerView">
+      <UniqueIdentifier>{7050d297-6786-4264-9501-b4a5af70d8f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{0239c1d6-44f9-43c8-a2a6-a51b1b7fd0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Writer">
+      <UniqueIdentifier>{506f64d0-5b87-4f3a-95ec-eb325a04602f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reader">
+      <UniqueIdentifier>{0a988a6d-95a1-4bf7-ac4d-eb8f96ab759f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveLoad">
+      <UniqueIdentifier>{d09a3bf9-1846-4a3e-9264-196bd0219398}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="World\Continent.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Country.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="MapView\MapView.cpp">
+      <Filter>MapView</Filter>
+    </ClCompile>
+    <ClCompile Include="MyObservable\MyObservable.cpp">
+      <Filter>MyObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="Reader\Reader.cpp">
+      <Filter>Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="Writer\Writer.cpp">
+      <Filter>Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerView\PlayerView.cpp">
+      <Filter>PlayerView</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapSaveLoadBuilder.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSaveLoadBuilder.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Country.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Continent.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="MapView\MapView.h">
+      <Filter>MapView</Filter>
+    </ClInclude>
+    <ClInclude Include="MyObservable\MyObservable.h">
+      <Filter>MyObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="MyObservable\MyObserver.h">
+      <Filter>MyObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader\Reader.h">
+      <Filter>Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="Writer\Writer.h">
+      <Filter>Writer</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerView\PlayerView.h">
+      <Filter>PlayerView</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSaveAndLoad.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoadBuilder.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="MapSaveLoadBuilder.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSaveLoadBuilder.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
