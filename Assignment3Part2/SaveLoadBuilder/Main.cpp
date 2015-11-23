@@ -6,6 +6,8 @@
 #include "World\World.h"
 #include "MapView\MapView.h"
 #include "PlayerView\PlayerView.h"
+#include "SaveLoad\RegularSaveGameBuilder.h"
+#include "SaveLoad\GameSaveAndLoad.h"
 
 using namespace std;
 
@@ -423,6 +425,12 @@ void runGame()
 				}
 
 				system("pause");
+
+				SaveLoadBuilder* saveBuilder = new RegularSaveGameBuilder(map, &players, players[i], PHASES[j]);
+				GameSaveAndLoad save;
+				save.setSaveLoadBuilder(saveBuilder);
+				save.ConstructSaveLoadOperation();
+				delete saveBuilder;
 			}
 		}
 

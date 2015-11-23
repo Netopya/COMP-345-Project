@@ -1,7 +1,7 @@
 #include "RegularSaveGameBuilder.h"
-#include "Player\Player.h"
-#include "World\World.h"
-#include "World\Country.h"
+#include "..\Player\Player.h"
+#include "..\World\World.h"
+#include "..\World\Country.h"
 
 
 RegularSaveGameBuilder::RegularSaveGameBuilder(World* map, vector<Player*>* players, Player* playerTurn, string phase)

@@ -1,0 +1,15 @@
+PLAYERINFO 3
+Jogn 
+Cand 
+alfg 
+GAMEINFO Jogn Reinforcement
+WORLDINFO 9
+Canada Jogn 0
+USA Jogn 1
+Mexico Jogn 0
+Bahamas alfg 0
+Greenland Cand 0
+Bermuda Cand 0
+Venezuela alfg 0
+Brazil Cand 0
+Peru alfg 0
