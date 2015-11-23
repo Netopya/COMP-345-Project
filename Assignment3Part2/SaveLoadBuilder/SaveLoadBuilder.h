@@ -11,7 +11,6 @@ protected:
 	const string WORLDID = "WORLDINFO";
 	const string GAMEID = "GAMEINFO";
 public:
-	virtual void writeElements(ofstream file) = 0;
 	virtual void initializeSaveLoad() = 0;
 	virtual void buildPlayers() = 0;
 	virtual void buildGameState() = 0;

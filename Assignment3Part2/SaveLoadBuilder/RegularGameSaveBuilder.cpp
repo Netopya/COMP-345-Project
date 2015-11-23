@@ -1,10 +1,10 @@
-#include "RegularSaveGame.h"
+#include "RegularSaveGameBuilder.h"
 #include "Player\Player.h"
 #include "World\World.h"
 #include "World\Country.h"
 
 
-RegularSaveGame::RegularSaveGame(World* map, vector<Player*>* players, Player* playerTurn, string phase)
+RegularSaveGameBuilder::RegularSaveGameBuilder(World* map, vector<Player*>* players, Player* playerTurn, string phase)
 {
 	this->map = map;
 	this->players = players;
@@ -12,12 +12,12 @@ RegularSaveGame::RegularSaveGame(World* map, vector<Player*>* players, Player* p
 	this->phase = phase;
 }
 
-void RegularSaveGame::initializeSaveLoad()
+void RegularSaveGameBuilder::initializeSaveLoad()
 {
 	file.open("example.txt");
 }
 
-void RegularSaveGame::buildPlayers()
+void RegularSaveGameBuilder::buildPlayers()
 {
 	file << PLAYERID.c_str() << ' ' << players->size() << endl;
 
@@ -27,12 +27,12 @@ void RegularSaveGame::buildPlayers()
 	}
 }
 
-void RegularSaveGame::buildGameState()
+void RegularSaveGameBuilder::buildGameState()
 {
 	file << GAMEID.c_str() << ' ' << playerTurn->GetPlayerName() << ' ' << phase << endl;
 }
 
-void RegularSaveGame::buildWorld()
+void RegularSaveGameBuilder::buildWorld()
 {
 	vector<Country*> countries = *(map->getCountries());
 
@@ -44,7 +44,7 @@ void RegularSaveGame::buildWorld()
 	}
 }
 
-void RegularSaveGame::endSaveLoad()
+void RegularSaveGameBuilder::endSaveLoad()
 {
 	file.close();
 }

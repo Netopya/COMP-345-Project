@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class RegularSaveGame : public SaveLoadBuilder
+class RegularSaveGameBuilder : public SaveLoadBuilder
 {
 private:
 	ofstream file;
@@ -16,7 +16,7 @@ private:
 	class Player* playerTurn;
 	string phase;
 public:
-	RegularSaveGame(class World* map, vector<class Player*>* players, class Player* playerTurn, string phase);
+	RegularSaveGameBuilder(class World* map, vector<class Player*>* players, class Player* playerTurn, string phase);
 
 	virtual void initializeSaveLoad() override;
 	virtual void buildPlayers() override;
