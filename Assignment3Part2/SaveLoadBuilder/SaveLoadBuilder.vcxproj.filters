@@ -69,10 +69,16 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SaveLoad\RegularGameSaveBuilder.cpp">
+    <ClCompile Include="SaveLoad\GameSaveAndLoad.cpp">
       <Filter>SaveLoad</Filter>
     </ClCompile>
-    <ClCompile Include="SaveLoad\GameSaveAndLoad.cpp">
+    <ClCompile Include="SaveLoad\RegularSaveGameBuilder.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\GameSaveInstance.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\RegularLoadGameBuilder.cpp">
       <Filter>SaveLoad</Filter>
     </ClCompile>
   </ItemGroup>
@@ -120,6 +126,9 @@
       <Filter>SaveLoad</Filter>
     </ClInclude>
     <ClInclude Include="SaveLoad\GameSaveAndLoad.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\RegularLoadGameBuilder.h">
       <Filter>SaveLoad</Filter>
     </ClInclude>
   </ItemGroup>

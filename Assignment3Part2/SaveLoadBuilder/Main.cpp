@@ -7,6 +7,7 @@
 #include "MapView\MapView.h"
 #include "PlayerView\PlayerView.h"
 #include "SaveLoad\RegularSaveGameBuilder.h"
+#include "SaveLoad\RegularLoadGameBuilder.h"
 #include "SaveLoad\GameSaveAndLoad.h"
 
 using namespace std;
@@ -91,12 +92,21 @@ int main()
 	mapView = new MapView(map);
 
 	// Ask for the game mode
-	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map", "Please enter a selection of 1 or 2", 1,2);
+	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game", "Please enter a selection of 1,2 or 3", 1,3);
 	
 
 	if (gameMode == 2)
 	{
 		mapEditor();
+	}
+	else if(gameMode == 3)
+	{
+		SaveLoadBuilder* loadBuilder = new RegularLoadGameBuilder();
+		GameSaveAndLoad save;
+		save.setSaveLoadBuilder(loadBuilder);
+		save.ConstructSaveLoadOperation();
+		GameSaveInstance* instance = save.getSave();
+		delete loadBuilder;
 	}
 	else
 	{

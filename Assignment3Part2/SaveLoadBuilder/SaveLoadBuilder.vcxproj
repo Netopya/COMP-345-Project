@@ -125,7 +125,9 @@
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Reader\Reader.cpp" />
     <ClCompile Include="SaveLoad\GameSaveAndLoad.cpp" />
-    <ClCompile Include="SaveLoad\RegularGameSaveBuilder.cpp" />
+    <ClCompile Include="SaveLoad\GameSaveInstance.cpp" />
+    <ClCompile Include="SaveLoad\RegularLoadGameBuilder.cpp" />
+    <ClCompile Include="SaveLoad\RegularSaveGameBuilder.cpp" />
     <ClCompile Include="World\Continent.cpp" />
     <ClCompile Include="World\Country.cpp" />
     <ClCompile Include="World\World.cpp" />
@@ -141,6 +143,7 @@
     <ClInclude Include="Reader\Reader.h" />
     <ClInclude Include="SaveLoad\GameSaveAndLoad.h" />
     <ClInclude Include="SaveLoad\GameSaveInstance.h" />
+    <ClInclude Include="SaveLoad\RegularLoadGameBuilder.h" />
     <ClInclude Include="SaveLoad\RegularSaveGameBuilder.h" />
     <ClInclude Include="SaveLoad\SaveLoadBuilder.h" />
     <ClInclude Include="World\Continent.h" />

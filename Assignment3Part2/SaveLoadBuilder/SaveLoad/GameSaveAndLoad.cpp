@@ -1,5 +1,6 @@
 #include "GameSaveAndLoad.h"
 #include "SaveLoadBuilder.h"
+#include "GameSaveInstance.h"
 
 void GameSaveAndLoad::setSaveLoadBuilder(SaveLoadBuilder* saveLoadBuilder)
 {
@@ -15,4 +16,9 @@ void GameSaveAndLoad::ConstructSaveLoadOperation()
 	saveLoadBuilder->endSaveLoad();
 
 	//TODO: return a contrusted object
+}
+
+GameSaveInstance* GameSaveAndLoad::getSave()
+{
+	return saveLoadBuilder->getSave();
 }
