@@ -2,12 +2,12 @@ PLAYERINFO 3
 Jogn 
 Cand 
 alfg 
-GAMEINFO Jogn Reinforcement
+GAMEINFO Jogn Fortification
 WORLDINFO 9
 Canada Jogn 0
-USA Jogn 1
+USA Jogn 2
 Mexico Jogn 0
-Bahamas alfg 0
+Bahamas Jogn 0
 Greenland Cand 0
 Bermuda Cand 0
 Venezuela alfg 0

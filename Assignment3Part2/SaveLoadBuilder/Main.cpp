@@ -75,6 +75,9 @@ int main()
 {
 	cout << "Welcome to RISK!" << endl;
 
+	// Randomize the random number generator using the current time as a seed
+	srand((unsigned int)time(NULL));
+
 	// Setup the map
 	map = new World(queryMapFile().c_str());
 
@@ -106,7 +109,16 @@ int main()
 		save.setSaveLoadBuilder(loadBuilder);
 		save.ConstructSaveLoadOperation();
 		GameSaveInstance* instance = save.getSave();
+		players = *(instance->createPlayers(map));
+		instance->addArmiesAndPlayersToMap(map);
+		
 		delete loadBuilder;
+
+		// Setup the number of countries
+		num_Countries = (int)map->getCountries()->size();
+		numberPlayers = players.size();
+
+		runGame();
 	}
 	else
 	{
@@ -114,8 +126,7 @@ int main()
 
 		cout << "Welcome to the Risk game" << endl;
 
-		// Randomize the random number generator using the current time as a seed
-		srand((unsigned int)time(NULL));
+
 
 		// Setup the number of countries
 		num_Countries = (int)map->getCountries()->size();

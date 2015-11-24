@@ -29,6 +29,8 @@ void GameSaveInstance::addArmiesAndPlayersToMap(World * map)
 		Country* country = map->getCountryFromName(countryInfos[i]->countryName.c_str());
 
 		country->setControllingPlayer(getPlayerByName(countryInfos[i]->owningPlayer));
+
+		country->addArmies(countryInfos[i]->numArmies);
 	}
 }
 

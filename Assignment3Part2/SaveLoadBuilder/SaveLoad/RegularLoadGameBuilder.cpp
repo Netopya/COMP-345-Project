@@ -4,6 +4,7 @@
 void RegularLoadGameBuilder::initializeSaveLoad()
 {
 	file.open("example.txt", ios::in);
+	saveInstance = new GameSaveInstance();
 }
 
 void RegularLoadGameBuilder::buildPlayers()
