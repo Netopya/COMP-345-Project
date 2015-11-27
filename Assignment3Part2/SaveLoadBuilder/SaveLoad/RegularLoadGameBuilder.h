@@ -7,6 +7,10 @@
 
 using namespace std;
 
+/*
+A builder that constructs a saveinstance based off of a saved game file
+*/
+
 class RegularLoadGameBuilder : public SaveLoadBuilder
 {
 private:

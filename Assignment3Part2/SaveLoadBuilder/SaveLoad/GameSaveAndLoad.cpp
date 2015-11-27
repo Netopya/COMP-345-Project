@@ -4,7 +4,7 @@
 
 void GameSaveAndLoad::setSaveLoadBuilder(SaveLoadBuilder* saveLoadBuilder)
 {
-	this->saveLoadBuilder = saveLoadBuilder;
+	this->saveLoadBuilder = saveLoadBuilder; // Set the concrete builder
 }
 
 void GameSaveAndLoad::ConstructSaveLoadOperation()
@@ -14,11 +14,9 @@ void GameSaveAndLoad::ConstructSaveLoadOperation()
 	saveLoadBuilder->buildGameState();
 	saveLoadBuilder->buildWorld();
 	saveLoadBuilder->endSaveLoad();
-
-	//TODO: return a contrusted object
 }
 
 GameSaveInstance* GameSaveAndLoad::getSave()
 {
-	return saveLoadBuilder->getSave();
+	return saveLoadBuilder->getSave(); // Get the constructed save/load instance
 }

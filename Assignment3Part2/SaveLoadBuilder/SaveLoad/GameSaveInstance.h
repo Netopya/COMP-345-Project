@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// Struct to hold country info from the save file
 struct CountryInfo
 {
 	string countryName;
@@ -18,12 +19,19 @@ struct CountryInfo
 	}
 };
 
+/*
+The class constructed by the save/load builder, holds an instance of the game
+*/
 class GameSaveInstance {
 
 private: 
 	vector<class Player*>* newPlayers;
 	class Player* getPlayerByName(string playerName);
+	bool hasError;
+	string lastError;
 public:
+	GameSaveInstance();
+
 	vector<string> players;
 	string playerTurn;
 	string phase;
@@ -33,4 +41,9 @@ public:
 	
 	void addArmiesAndPlayersToMap(class World* map);
 	vector<class Player*>* createPlayers(class World* map);
+	string getPhase();
+
+	void setError(bool error, string description);
+	bool errorOccured();
+	string getLastError();
 };

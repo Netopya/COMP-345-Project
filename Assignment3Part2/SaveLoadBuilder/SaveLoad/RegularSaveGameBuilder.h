@@ -7,6 +7,10 @@
 
 using namespace std;
 
+/*
+This builder save the current state of the game to a file
+*/
+
 class RegularSaveGameBuilder : public SaveLoadBuilder
 {
 private:

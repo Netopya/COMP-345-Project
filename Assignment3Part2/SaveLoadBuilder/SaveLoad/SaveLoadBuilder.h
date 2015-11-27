@@ -9,6 +9,8 @@ class SaveLoadBuilder
 {
 protected:
 	GameSaveInstance* saveInstance;
+
+	// ID's to identify headers in the game save file
 	const string PLAYERID = "PLAYERINFO";
 	const string WORLDID = "WORLDINFO";
 	const string GAMEID = "GAMEINFO";
