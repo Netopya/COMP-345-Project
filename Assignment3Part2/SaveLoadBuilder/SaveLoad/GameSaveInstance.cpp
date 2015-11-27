@@ -66,6 +66,11 @@ string GameSaveInstance::getPhase()
 	return phase;
 }
 
+string GameSaveInstance::getPlayer()
+{
+	return playerTurn;
+}
+
 void GameSaveInstance::setError(bool error, string description)
 {
 	lastError = description;

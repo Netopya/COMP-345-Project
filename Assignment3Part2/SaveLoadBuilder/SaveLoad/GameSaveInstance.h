@@ -42,6 +42,7 @@ public:
 	void addArmiesAndPlayersToMap(class World* map);
 	vector<class Player*>* createPlayers(class World* map);
 	string getPhase();
+	string getPlayer();
 
 	void setError(bool error, string description);
 	bool errorOccured();

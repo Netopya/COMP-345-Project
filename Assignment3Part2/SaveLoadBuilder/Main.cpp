@@ -80,6 +80,7 @@ int requestInt(string question, string errorMessage, int min, int max);
 void saveGame(int player, int phase); // Save the game
 bool restorePhaseFromSave = false;
 int phaseToRestore = -1;
+int playerToRestore = -1;
 
 int main()
 {
@@ -130,6 +131,8 @@ int main()
 			players = *(instance->createPlayers(map));
 			instance->addArmiesAndPlayersToMap(map);
 			
+			numberPlayers = players.size();
+
 			// Setup restoring to the saved phase
 			restorePhaseFromSave = true;
 			
@@ -141,16 +144,27 @@ int main()
 				}
 			}
 
-			if (phaseToRestore < 0)
+			for (int i = 0; i < numberPlayers; i++)
 			{
-				instance->setError(true, "Invalid phase in game save");
+				// Check if any players are already dead
+				checkPlayerAndKill(players[i]);
+
+				if (instance->getPlayer() == players[i]->GetPlayerName())
+				{
+					playerToRestore = i;
+				}
+			}	
+
+			if (phaseToRestore < 0 || playerToRestore < 0)
+			{
+				instance->setError(true, "Invalid phase or player in game save");
 			}
 
 			delete loadBuilder;
 
 			// Setup the number of countries
 			num_Countries = (int)map->getCountries()->size();
-			numberPlayers = players.size();
+			
 
 			inMainMenu = false;
 
@@ -471,6 +485,12 @@ void runGame()
 		// Loop through the players
 		for (int i = 0; i < numberPlayers; i++)
 		{
+			// Restore the player's turn from saved game
+			if (restorePhaseFromSave)
+			{
+				i = playerToRestore;
+			}
+
 			// If the player is dead, skip their turn
 			if (!players[i]->isAlive())
 			{
@@ -488,6 +508,30 @@ void runGame()
 				{
 					restorePhaseFromSave = false;
 					j = phaseToRestore;
+				}
+				else
+				{
+					int option;
+
+					switch (gameSavingMode)
+					{
+					case 1:
+						// Ask for save
+						option = requestInt("Would you like to save the game? \n 1. Yes \n 2. No", "You did not enter a valid option", 1, 2);
+						if (option != 1)
+						{
+							break;
+						}
+					case 2:
+						// Always save
+						saveGame(i, j);
+						break;
+					case 3:
+						// Never save
+						break;
+					default:
+						break;
+					}
 				}
 
 				// Display the updated map and player info
@@ -511,27 +555,7 @@ void runGame()
 
 				system("pause");
 
-				int option;
-
-				switch (gameSavingMode)
-				{
-				case 1:
-					// Ask for save
-					option = requestInt("Would you like to save the game? \n 1. Yes \n 2. No", "You did not enter a valid option", 1, 2);
-					if (option != 1)
-					{
-						break;
-					}					
-				case 2:
-					// Always save into the next phase
-					saveGame(i, j + 1 % NUM_PHASES);
-					break;
-				case 3:
-					// Never save
-					break;
-				default:
-					break;
-				}				
+					
 			}
 		}
 

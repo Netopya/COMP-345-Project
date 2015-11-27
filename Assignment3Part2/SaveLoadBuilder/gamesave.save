@@ -1,15 +1,16 @@
-PLAYERINFO 3
+PLAYERINFO 4
 Michael 
 Mina 
+Max 
 Paul 
-GAMEINFO Michael Reinforcement
+GAMEINFO Mina Fortification
 WORLDINFO 9
-Canada Paul 0
+Canada Mina 0
 USA Michael 1
-Mexico Michael 0
-Bahamas Mina 0
-Greenland Paul 0
-Bermuda Michael 0
-Venezuela Mina 0
-Brazil Mina 0
+Mexico Paul 0
+Bahamas Max 0
+Greenland Mina 0
+Bermuda Mina 1
+Venezuela Paul 0
+Brazil Michael 0
 Peru Paul 0
