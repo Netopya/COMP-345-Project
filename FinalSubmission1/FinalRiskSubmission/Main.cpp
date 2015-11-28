@@ -71,7 +71,7 @@ int requestInt(string question, string errorMessage, int min, int max);
 int main()
 {
 	cout << "Welcome to RISK!" << endl;
-
+	
 	// Setup the map
 	map = new World(queryMapFile().c_str());
 
