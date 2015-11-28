@@ -9,6 +9,13 @@ World::World(const char* _inputFile)
 	lastOperationSuccess = analyseFile();
 }
 
+World::World()
+{
+	lastErrorMessage = NULL;
+	continentsVector = new vector<Continent*>();
+	countriesVector = new vector<Country*>();
+}
+
 bool World::addContinent(const char* _name)
 {
 	lastOperationSuccess = true;

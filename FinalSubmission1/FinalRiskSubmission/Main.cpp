@@ -81,10 +81,29 @@ int main()
 {
 	cout << "Welcome to RISK!" << endl;
 	
-	// Setup the map
-	map = new World(queryMapFile().c_str());
+	int mapOption = requestInt("Would you like to: \n 1. Load map \n 2. Create new map", "You did not enter 1 or 2", 1, 2);
+	
+	// If creating a new map, go directly into the map editor
+	if (mapOption == 2)
+	{
+		map = new World();
+		
+		// Setup the map view
+		mapView = new MapView(map);
+		
+		mapEditor();
 
-	// Check if the map was correctly loaded
+		mapView->setEditorMode(false);
+	}
+	else
+	{
+		// Setup the map
+		map = new World(queryMapFile().c_str());		
+		// Setup the map view
+		mapView = new MapView(map);
+	}
+	
+	// Check if the map was correctly loaded/created
 	if (!(map->getCountries()->size() > 0))
 	{
 		cout << "Could not load map file" << endl;
@@ -94,8 +113,7 @@ int main()
 		return 1;
 	}
 
-	// Setup the map view
-	mapView = new MapView(map);
+	
 
 	bool inMainMenu = true;
 

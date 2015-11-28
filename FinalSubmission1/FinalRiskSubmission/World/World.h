@@ -39,6 +39,7 @@ public:
 	 * Constructor which immediately loads the input file when called.
 	 */
 	World(const char* _inputFile);
+	World();
 
 	bool addContinent(const char* _name);
 	bool addCountry(const char* _name, const char* _continent);
