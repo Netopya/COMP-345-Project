@@ -762,6 +762,13 @@ void checkPlayerAndKill(Player* player)
 
 void playerFortify(Player* player)
 {
+	// Players need atleast 2 countries to fortify
+	if (player->getCountries().size() < 2)
+	{
+		cout << "You do not have enough countries to fortify" << endl;
+		system("pause");
+	}
+
 	int fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
 
 	if (fortify == 1)
