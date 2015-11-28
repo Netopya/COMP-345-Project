@@ -221,7 +221,11 @@ bool World::validPlayerPath(vector<Country*> investigate, vector<Country*>* visi
 		if (!bvisited)
 		{
 			visited->push_back(investigate[i]);
-			return validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+			bool foundPath = validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+			if (foundPath)
+			{
+				return true;
+			}
 		}
 	}
 
