@@ -1,11 +1,12 @@
 #include "Player.h"
 
-Player::Player(string playerName, World* map)
+Player::Player(string playerName, World* map, bool ai)
 {
 	this->playerName = playerName;
 	this->map = map;
+	computerPlayer = ai;
 	alive = true;
-	wins = 0;
+	wins = 0;	
 }
 
 string Player::GetPlayerName()
@@ -49,6 +50,11 @@ int Player::getNumWins() const
 void Player::addWin()
 {
 	wins += 1;
+}
+
+bool Player::isComputerPlayer() const
+{
+	return computerPlayer;
 }
 
 vector<Country*> Player::getCountries()

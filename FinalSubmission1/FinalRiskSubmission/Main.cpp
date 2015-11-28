@@ -31,6 +31,7 @@ See README.txt for Visual Studio compilation information
 */
 
 int numberPlayers; // Number of players
+int numberComputerPlayers; // Number of AI players
 vector<Player*> players; // List of players
 const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
@@ -419,13 +420,24 @@ void queryPlayers()
 
 	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
 
+	numberComputerPlayers = requestInt("Please enter the number of computer players", "Please specify between 0 and " + to_string(numberPlayers), 0, numberPlayers);
+
 	// Ask for the player names and use the name to create a new player
 	for (int i = 0; i < numberPlayers; i++)
 	{
-		cout << "Enter the name of player " << i + 1 << endl;
+		bool computerPlayer = (numberPlayers - i) <= numberComputerPlayers;
+		if (computerPlayer)
+		{
+			cout << "Enter the name of computer player " << i + 1 - (numberPlayers - numberComputerPlayers) << endl;
+		}
+		else
+		{
+			cout << "Enter the name of human player " << i + 1 << endl;
+		}
+		
 		string playerName;
 		getline(cin, playerName);
-		Player* newPlayer = new Player(playerName, map);
+		Player* newPlayer = new Player(playerName, map, computerPlayer);
 		PlayerView* playerview = new PlayerView(newPlayer);
 		players.push_back(newPlayer);
 	}
@@ -514,6 +526,10 @@ void runGame()
 			// Loop through the phases of the game
 			for (int j = 0; j < NUM_PHASES; j++)
 			{
+				// Display the updated map and player info
+				map->notifyObservers();
+				players[i]->notifyObservers();
+
 				// If loading from save, restore the phase
 				if (restorePhaseFromSave)
 				{
@@ -544,10 +560,6 @@ void runGame()
 						break;
 					}
 				}
-
-				// Display the updated map and player info
-				map->notifyObservers();
-				players[i]->notifyObservers();
 
 				cout << endl << players[i]->GetPlayerName() << " perform your " << PHASES[j] << " move" << endl;
 
@@ -592,16 +604,7 @@ void runGame()
 
 void playerReinforce(Player* player)
 {
-	vector<Country*> playerCountries;
-
-	// Get all the countries that the player owns
-	for (unsigned i = 0; i < map->getCountries()->size(); i++)
-	{
-		if (map->getCountries()->at(i)->getControllingPlayer() == player)
-		{
-			playerCountries.push_back(map->getCountries()->at(i));
-		}
-	}
+	vector<Country*> playerCountries = player->getCountries();
 
 	// Get the number of reinforcements (atleast 1 army)
 	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
@@ -609,35 +612,48 @@ void playerReinforce(Player* player)
 	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
 	{
-		// Ask for a country to place armies on and ensure it is a valid choice
-		cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
-		cout << "Which country would you like to place some armies on?" << endl;
-
-		string countryName;
-		cin >> countryName;
-
-		Country* country = map->getCountryFromName(countryName.c_str());
-		if (country == NULL)
+		if (player->isComputerPlayer())
 		{
-			cout << "The country you entered does not exists" << endl;
-			system("pause");
-		}
-		else if (country->getControllingPlayer() != player)
-		{
-			cout << "You do not countrol that country" << endl;
-			system("pause");
+			// Random pick a country and add all armies to it
+			int randomCountry = playerCountries.size() > 1 ? rand() % (playerCountries.size() - 1) : 0;
+			playerCountries[randomCountry]->addArmies(numReinforcements);
+
+			cout << "Computer player " << player->GetPlayerName() << " adds " << numReinforcements << " armies to " << playerCountries[randomCountry]->getName() << endl;
+
+			numReinforcements = 0;
 		}
 		else
 		{
-			bool validInput = false;
-			int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
-			
-			// Add the reinforcements to the country
-			country->addArmies(inputArmies);
+			// Ask for a country to place armies on and ensure it is a valid choice
+			cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
+			cout << "Which country would you like to place some armies on?" << endl;
 
-			// Remove the armies from available reinforcements
-			numReinforcements -= inputArmies;
-		}
+			string countryName;
+			cin >> countryName;
+
+			Country* country = map->getCountryFromName(countryName.c_str());
+			if (country == NULL)
+			{
+				cout << "The country you entered does not exists" << endl;
+				system("pause");
+			}
+			else if (country->getControllingPlayer() != player)
+			{
+				cout << "You do not countrol that country" << endl;
+				system("pause");
+			}
+			else
+			{
+				bool validInput = false;
+				int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
+
+				// Add the reinforcements to the country
+				country->addArmies(inputArmies);
+
+				// Remove the armies from available reinforcements
+				numReinforcements -= inputArmies;
+			}
+		}		
 	}
 }
 
@@ -787,7 +803,20 @@ void playerFortify(Player* player)
 		system("pause");
 	}
 
-	int fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
+	int fortify;
+
+	if (player->isComputerPlayer())
+	{
+		// Computer players never fortify
+		cout << "Computer player " << player->GetPlayerName() << " decides not to fortify" << endl;
+		fortify = 2;
+
+	}
+	else
+	{ 
+		fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
+	}
+	
 
 	if (fortify == 1)
 	{

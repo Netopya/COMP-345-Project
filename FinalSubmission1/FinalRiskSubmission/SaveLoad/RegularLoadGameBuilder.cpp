@@ -26,9 +26,10 @@ void RegularLoadGameBuilder::buildPlayers()
 		for (int i = 0; i < numPlayers; i++)
 		{
 			string playerName;
-			file >> playerName;
+			bool isAI;
+			file >> playerName >> isAI;
 
-			saveInstance->players.push_back(playerName);
+			saveInstance->addPlayerInfo(playerName, isAI);
 		}
 	}
 	else

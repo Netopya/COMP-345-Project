@@ -1,16 +1,15 @@
-PLAYERINFO 4
-Michael 
-Mina 
-Max 
-Paul 
+PLAYERINFO 3
+Michael 0
+David  1
+Alex 1
 GAMEINFO Michael Fortification
 WORLDINFO 9
-Canada Michael 0
+Canada David  0
 USA Michael 1
-Mexico Mina 0
-Bahamas Max 0
-Greenland Michael 0
-Bermuda Mina 0
-Venezuela Max 0
-Brazil Paul 0
-Peru Paul 0
+Mexico David  0
+Bahamas Michael 0
+Greenland David  0
+Bermuda Alex 0
+Venezuela Alex 0
+Brazil David  0
+Peru Alex 0

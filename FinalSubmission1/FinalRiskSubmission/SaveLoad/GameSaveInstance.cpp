@@ -28,6 +28,12 @@ void GameSaveInstance::addCountryInfo(string countryName, string owningPlayer, i
 	countryInfos.push_back(countryInfo);
 }
 
+void GameSaveInstance::addPlayerInfo(string playerName, bool isAI)
+{
+	PlayerInfo* playerInfo = new PlayerInfo(playerName, isAI);
+	players.push_back(playerInfo);
+}
+
 void GameSaveInstance::addArmiesAndPlayersToMap(World * map)
 {
 	// Go through the map, assign players to countries they control and set the number of armies
@@ -53,7 +59,7 @@ vector<Player*>* GameSaveInstance::createPlayers(World * map)
 	newPlayers = new vector<class Player*>();
 	for (unsigned i = 0; i < players.size(); i++)
 	{
-		Player* newPlayer = new Player(players[i], map);
+		Player* newPlayer = new Player(players[i]->playerName, map, players[i]->isAI);
 		PlayerView* playerview = new PlayerView(newPlayer);
 		newPlayers->push_back(newPlayer);
 	}
