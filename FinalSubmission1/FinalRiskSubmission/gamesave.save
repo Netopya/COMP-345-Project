@@ -1,15 +1,14 @@
-PLAYERINFO 3
-Michael 0
-Paul 0
-ROBO4000 1
-GAMEINFO Michael Fortification
+PLAYERINFO 2
+Michael~B 0
+Alex~Fallli~hoho 0
+GAMEINFO Michael~B Attack
 WORLDINFO 9
-Canada Michael 0
-USA Michael 1
-Mexico Paul 0
-Bahamas Michael 0
-Greenland Paul 0
-Bermuda Michael 0
-Venezuela ROBO4000 0
-Brazil Paul 0
-Peru ROBO4000 0
+Canada Alex~Fallli~hoho 0
+USA Michael~B 1
+Mexico Alex~Fallli~hoho 0
+Bahamas Michael~B 0
+Greenland Michael~B 0
+Bermuda Alex~Fallli~hoho 0
+Venezuela Michael~B 0
+Brazil Alex~Fallli~hoho 0
+Peru Alex~Fallli~hoho 0

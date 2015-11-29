@@ -25,14 +25,14 @@ void RegularSaveGameBuilder::buildPlayers()
 	// Write the names of the players
 	for (unsigned i = 0; i < players->size(); i++)
 	{
-		file << players->at(i)->GetPlayerName() << ' ' << players->at(i)->isComputerPlayer() << endl;
+		file << encodeString(players->at(i)->GetPlayerName()) << ' ' << players->at(i)->isComputerPlayer() << endl;
 	}
 }
 
 void RegularSaveGameBuilder::buildGameState()
 {
 	// Write the current game phase
-	file << GAMEID.c_str() << ' ' << playerTurn->GetPlayerName() << ' ' << phase << endl;
+	file << GAMEID.c_str() << ' ' << encodeString(playerTurn->GetPlayerName()) << ' ' << phase << endl;
 }
 
 void RegularSaveGameBuilder::buildWorld()
@@ -45,7 +45,7 @@ void RegularSaveGameBuilder::buildWorld()
 	// Write the name of each country, the player that controls it, and the number of armies on the country
 	for (unsigned i = 0; i < countries.size(); i++)
 	{
-		file << countries[i]->getName() << ' ' << countries[i]->getControllingPlayer()->GetPlayerName() << ' ' << countries[i]->getNumArmies() << endl;
+		file << encodeString(countries[i]->getName()) << ' ' << encodeString(countries[i]->getControllingPlayer()->GetPlayerName()) << ' ' << countries[i]->getNumArmies() << endl;
 	}
 }
 

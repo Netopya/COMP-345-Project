@@ -2,7 +2,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <algorithm>
 #include "GameSaveInstance.h"
+
 using namespace std;
 
 class SaveLoadBuilder
@@ -14,6 +17,19 @@ protected:
 	const string PLAYERID = "PLAYERINFO";
 	const string WORLDID = "WORLDINFO";
 	const string GAMEID = "GAMEINFO";
+	const char SPACECHAR = '~';
+
+	// Since spaces are a delimiting character, replace them by a ~
+	string encodeString(string unencoded) { 
+		replace(unencoded.begin(), unencoded.end(), ' ', SPACECHAR); 
+		return unencoded;
+	}
+
+	string decodeString(string encoded)
+	{
+		replace(encoded.begin(), encoded.end(), SPACECHAR, ' ');
+		return encoded;
+	}
 public:
 	virtual void initializeSaveLoad() = 0;
 	virtual void buildPlayers() = 0;

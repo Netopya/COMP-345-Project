@@ -29,7 +29,7 @@ void RegularLoadGameBuilder::buildPlayers()
 			bool isAI;
 			file >> playerName >> isAI;
 
-			saveInstance->addPlayerInfo(playerName, isAI);
+			saveInstance->addPlayerInfo(decodeString(playerName), isAI);
 		}
 	}
 	else
@@ -43,11 +43,16 @@ void RegularLoadGameBuilder::buildGameState()
 	// read the game state saved in the file
 
 	string stateInfo;
-	file >> stateInfo >> saveInstance->playerTurn >> saveInstance->phase;
+	string playerTurn;
+	file >> stateInfo >> playerTurn >> saveInstance->phase;
 
 	if (stateInfo != GAMEID)
 	{
 		saveInstance->setError(true, "Could not parse game state from saved game");
+	}
+	else
+	{
+		saveInstance->playerTurn = decodeString(playerTurn);
 	}
 }
 
@@ -67,7 +72,7 @@ void RegularLoadGameBuilder::buildWorld()
 			string playerName;
 			int numArmies;
 			file >> countryName >> playerName >> numArmies;
-			saveInstance->addCountryInfo(countryName, playerName, numArmies);
+			saveInstance->addCountryInfo(decodeString(countryName), decodeString(playerName), numArmies);
 		}
 	}
 	else
