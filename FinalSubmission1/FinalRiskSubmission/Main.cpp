@@ -204,6 +204,8 @@ int main()
 			}
 			else
 			{
+				settingGameLog();// Dependent on Player List must be after players = *(instance->createPlayers(map));
+
 				// All is well, proceed into the game
 				runGame();
 			}
@@ -1013,6 +1015,7 @@ void settingGameLog()
 	//	gameLog = new PhaseGameLog(0, gameLog1);
 	GameLogView* gameLogView = new GameLogView(gameLog);
 }
+
 void saveGame(int player, int phase)
 {
 	// Save the game

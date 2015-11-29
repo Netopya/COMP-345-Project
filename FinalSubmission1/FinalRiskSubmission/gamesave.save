@@ -1,47 +1,15 @@
-PLAYERINFO 2
-p1 0
-p2 0
-GAMEINFO p1 Reinforcement
-WORLDINFO 42
-Alaska p1 0
-Northwest Territory p1 0
-Alberta p1 0
-Kamchatka p1 0
-Ontario p1 0
-Greenland p2 0
-Western United States p2 0
-Quebec p1 0
-Iceland p1 0
-Eastern United States p2 0
-Central America p2 0
-Venezuala p1 0
-Peru p2 0
-Brazil p1 0
-Argentina p1 0
-North Africa p2 0
-Western Europe p1 0
-Southern Europe p1 0
-Egypt p1 0
-East Africa p1 0
-Congo p2 0
-South Africa p2 0
-Madagascar p2 0
-Middle East p2 0
-Great Britain p2 0
-Scandinavia p1 0
-Northern Europe p2 0
-Ukraine p1 0
-Ural p2 0
-Afghanistan p2 0
-India p1 0
-Siberia p2 0
-China p1 0
-Siam p2 0
-Yatusk p1 0
-Irkutsk p2 0
-Mongolia p2 0
-Indonesia p1 0
-Japan p2 0
-New Guinea p1 0
-Western Australia p2 0
-Eastern Australia p2 0
+PLAYERINFO 3
+Michael 0
+Paul 0
+ROBO4000 1
+GAMEINFO Michael Fortification
+WORLDINFO 9
+Canada Michael 0
+USA Michael 1
+Mexico Paul 0
+Bahamas Michael 0
+Greenland Paul 0
+Bermuda Michael 0
+Venezuela ROBO4000 0
+Brazil Paul 0
+Peru ROBO4000 0
