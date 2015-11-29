@@ -6,6 +6,11 @@
 #include "World\World.h"
 #include "MapView\MapView.h"
 #include "PlayerView\PlayerView.h"
+#include "GameLog\GameLog.h"
+#include "GameLog\SimpleGameLog.h"
+#include "GameLog\PlayerGameLog.h"
+#include "GameLog\PhaseGameLog.h"
+#include "GameLogView\GameLogView.h"
 
 using namespace std;
 
@@ -13,6 +18,7 @@ using namespace std;
 Michael Bilinsky 26992358
 Mina Abdel Malek 26951791
 Maxime Morin 27501455
+Pawel-Stanislaw Obiedzinski 22026643
 
 COMP 345 Project Intermediate Build
 
@@ -35,6 +41,12 @@ int num_Countries;
 
 World* map;
 MapView* mapView; // The map view component
+
+
+GameLog* gameLog; 
+GameLogView* gameLogView;
+void settingGameLog();
+
 
 // Ask for number of players and their names
 void queryPlayers();
@@ -109,6 +121,8 @@ int main()
 		num_Countries = (int)map->getCountries()->size();
 
 		queryPlayers();
+
+		settingGameLog();// Dependent on Player List must be after queryPlayers();
 
 		assignCountries();
 
@@ -495,6 +509,16 @@ void playerReinforce(Player* player)
 
 			// Remove the armies from available reinforcements
 			numReinforcements -= inputArmies;
+
+
+			//Game Log in Reinforcement phase
+			string str = "Sent " + to_string(inputArmies) + " armies to " + countryName;
+			gameLog->LogAction(player->GetPlayerName(), 0, str);
+			if (gameLog->okToPrint(player->GetPlayerName(), 0)) {
+				gameLog->notifyObservers();
+			}
+
+
 		}
 	}
 }
@@ -596,6 +620,14 @@ void playerAttack(Player* player)
 	
 	int attackingArmies = playerCountry->getNumArmies();
 	int defendingArmies = enemyCountry->getNumArmies();
+
+
+	//Game Log in Attack phase
+	string str = "Sent an Attack from" + string(playerCountry->getName()) + " onto target country: " + string(enemyCountry->getName());
+	gameLog->LogAction(player->GetPlayerName(), 1, str);
+	if (gameLog->okToPrint(player->GetPlayerName(), 1)) {
+		gameLog->notifyObservers();
+	}
 
 	// Very simple attacking logic, if the attacker has more armies they win, else they lose
 	if (attackingArmies > defendingArmies)
@@ -711,6 +743,14 @@ void playerFortify(Player* player)
 						validFortification = true;
 
 						map->notifyObservers();
+
+
+						//Game Log in Fortification phase
+						string str = "Sent " + to_string(armyTransfer) + " armies from " + string(country->getName()) + "to country: " + string(toCountry->getName());
+						gameLog->LogAction(player->GetPlayerName(), 2, str);
+						if (gameLog->okToPrint(player->GetPlayerName(), 2)) {
+							gameLog->notifyObservers();
+						}
 					}
 				}
 
@@ -748,4 +788,41 @@ int requestInt(string question, string errorMessage, int min, int max)
 	}
 
 	return input;
+}
+void settingGameLog() 
+{
+	cout << "Game Log Configuraion" << endl;
+
+	GameLog* gameLog2 = new SimpleGameLog;
+	string playerRestrictQStr= "Restrict Game Log to a single player?\n0. No\n";
+	for (int i = 0; i < players.size(); ++i)
+	{
+		playerRestrictQStr += to_string(i + 1) + ". " + players[i]->GetPlayerName() + "\n";
+	}
+	int playerRestrictQ = requestInt(playerRestrictQStr, "Invalid input, please enter the number corresponding to your selection.", 0, players.size());
+	GameLog* gameLog1;
+	if (playerRestrictQ == 0) {
+		gameLog1 = gameLog2;
+	}
+	else {
+		gameLog1 = new PlayerGameLog(players[playerRestrictQ-1]->GetPlayerName(), gameLog2);
+	}
+	//GameLog* gameLog1 = new PlayerGameLog("p1", gameLog2);
+	int phaseRestrictQ = requestInt("Restrict Game Log to a single phase?\n0. No\n1. Reinforcement\n2. Attack\n3. Fortification","Invalid input, please enter the number corresponding to your selection.", 0, 3);
+	switch (phaseRestrictQ) {
+	case 0:
+		gameLog =  gameLog1;
+		break;
+	case 1:
+		gameLog = new PhaseGameLog(0, gameLog1);
+		break;
+	case 2:
+		gameLog = new PhaseGameLog(1, gameLog1);
+		break;
+	case 3:
+		gameLog = new PhaseGameLog(2, gameLog1);
+		break;
+	}
+	//	gameLog = new PhaseGameLog(0, gameLog1);
+	GameLogView* gameLogView = new GameLogView(gameLog);
 }

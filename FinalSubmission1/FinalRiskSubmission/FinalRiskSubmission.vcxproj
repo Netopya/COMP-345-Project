@@ -124,6 +124,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="GameLogView\GameLogView.h" />
+    <ClInclude Include="GameLog\GameLog.h" />
+    <ClInclude Include="GameLog\GameLogDecorator.h" />
+    <ClInclude Include="GameLog\PhaseGameLog.h" />
+    <ClInclude Include="GameLog\PlayerGameLog.h" />
+    <ClInclude Include="GameLog\SimpleGameLog.h" />
     <ClInclude Include="MapView\MapView.h" />
     <ClInclude Include="MyObservable\MyObservable.h" />
     <ClInclude Include="MyObservable\MyObserver.h" />
@@ -136,6 +142,7 @@
     <ClInclude Include="Writer\Writer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLogView\GameLogView.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapView\MapView.cpp" />
     <ClCompile Include="MyObservable\MyObservable.cpp" />
