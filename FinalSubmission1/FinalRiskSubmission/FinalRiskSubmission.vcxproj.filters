@@ -16,6 +16,30 @@
     <Filter Include="Maps">
       <UniqueIdentifier>{84c278de-f3de-4ac6-a746-fc901ae4c69e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MapView">
+      <UniqueIdentifier>{9cef4a27-974c-4792-85b2-11040f38fbe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyObservable">
+      <UniqueIdentifier>{e833830e-2fe9-48c9-9f37-9b16c0e39c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{1f7fd609-a630-4e60-8df8-90d125780130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayerView">
+      <UniqueIdentifier>{2c91788c-3973-4b8e-a35f-d046d6d4d832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reader">
+      <UniqueIdentifier>{53e8fddc-c846-4859-856b-c8fd315d294e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Writer">
+      <UniqueIdentifier>{6f5a4f74-218f-4138-9d1b-39ed39f14404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{1f0e50c4-2fe3-4a73-b481-22001344161e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveLoad">
+      <UniqueIdentifier>{ce37ad09-4712-47f7-a25a-f06936c1675c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MapRessourceFiles\World.txt">
@@ -32,35 +56,50 @@
     <ClInclude Include="Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Reader\Reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World\Continent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World\Country.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World\World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Writer\Writer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MapView\MapView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyObservable\MyObservable.h">
-      <Filter>Header Files</Filter>
+      <Filter>MapView</Filter>
     </ClInclude>
     <ClInclude Include="MyObservable\MyObserver.h">
-      <Filter>Header Files</Filter>
+      <Filter>MyObservable</Filter>
+    </ClInclude>
+    <ClInclude Include="MyObservable\MyObservable.h">
+      <Filter>MyObservable</Filter>
     </ClInclude>
     <ClInclude Include="Player\Player.h">
-      <Filter>Header Files</Filter>
+      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerView\PlayerView.h">
-      <Filter>Header Files</Filter>
+      <Filter>PlayerView</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader\Reader.h">
+      <Filter>Reader</Filter>
+    </ClInclude>
+    <ClInclude Include="Writer\Writer.h">
+      <Filter>Writer</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Continent.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Country.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\GameSaveAndLoad.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\GameSaveInstance.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\RegularLoadGameBuilder.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\RegularSaveGameBuilder.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoad\SaveLoadBuilder.h">
+      <Filter>SaveLoad</Filter>
     </ClInclude>
     <ClInclude Include="GameLog\GameLog.h">
       <Filter>Header Files</Filter>
@@ -86,31 +125,43 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapView\MapView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>MapView</Filter>
     </ClCompile>
     <ClCompile Include="MyObservable\MyObservable.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>MyObservable</Filter>
     </ClCompile>
     <ClCompile Include="Player\Player.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerView\PlayerView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PlayerView</Filter>
     </ClCompile>
     <ClCompile Include="Reader\Reader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World\World.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Reader</Filter>
     </ClCompile>
     <ClCompile Include="Writer\Writer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Writer</Filter>
     </ClCompile>
-    <ClCompile Include="World\Continent.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="World\World.cpp">
+      <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="World\Country.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Continent.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\GameSaveAndLoad.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\GameSaveInstance.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\RegularLoadGameBuilder.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoad\RegularSaveGameBuilder.cpp">
+      <Filter>SaveLoad</Filter>
     </ClCompile>
     <ClCompile Include="GameLogView\GameLogView.cpp">
       <Filter>Source Files</Filter>

@@ -19,10 +19,11 @@ class Player : public MyObservable
 private:
 	string playerName;
 	bool alive;
+	bool computerPlayer; //Is AI
 	class World* map;
 	int wins;
 public:
-	Player(string, World*);
+	Player(string, World*, bool);
 	string GetPlayerName();
 	/*
 	 * Get the player's name truncated to a max length.
@@ -33,6 +34,7 @@ public:
 	int getNumArmies();
 	int getNumWins() const;
 	void addWin();
+	bool isComputerPlayer() const;
 	/*
 	 * Get controlled countries.
 	 */

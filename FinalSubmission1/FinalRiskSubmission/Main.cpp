@@ -6,11 +6,17 @@
 #include "World\World.h"
 #include "MapView\MapView.h"
 #include "PlayerView\PlayerView.h"
+
 #include "GameLog\GameLog.h"
 #include "GameLog\SimpleGameLog.h"
 #include "GameLog\PlayerGameLog.h"
 #include "GameLog\PhaseGameLog.h"
 #include "GameLogView\GameLogView.h"
+
+#include "SaveLoad\RegularSaveGameBuilder.h"
+#include "SaveLoad\RegularLoadGameBuilder.h"
+#include "SaveLoad\GameSaveAndLoad.h"
+
 
 using namespace std;
 
@@ -34,16 +40,18 @@ See README.txt for Visual Studio compilation information
 */
 
 int numberPlayers; // Number of players
+int numberComputerPlayers; // Number of AI players
 vector<Player*> players; // List of players
 const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
 int num_Countries;
+int gameSavingMode = 1;
 
 World* map;
 MapView* mapView; // The map view component
 
 
-GameLog* gameLog; 
+GameLog* gameLog;
 GameLogView* gameLogView;
 void settingGameLog();
 
@@ -80,14 +88,39 @@ string queryMapFile(); //Ask for the map file to load
 // Request an integer from the user, showing an error message until they enter a valid number within the bounds
 int requestInt(string question, string errorMessage, int min, int max);
 
+void saveGame(int player, int phase); // Save the game
+bool restorePhaseFromSave = false;
+int phaseToRestore = -1;
+int playerToRestore = -1;
+
+
 int main()
 {
 	cout << "Welcome to RISK!" << endl;
 
-	// Setup the map
-	map = new World(queryMapFile().c_str());
+	int mapOption = requestInt("Would you like to: \n 1. Load map \n 2. Create new map", "You did not enter 1 or 2", 1, 2);
 
-	// Check if the map was correctly loaded
+	// If creating a new map, go directly into the map editor
+	if (mapOption == 2)
+	{
+		map = new World();
+
+		// Setup the map view
+		mapView = new MapView(map);
+
+		mapEditor();
+
+		mapView->setEditorMode(false);
+	}
+	else
+	{
+		// Setup the map
+		map = new World(queryMapFile().c_str());
+		// Setup the map view
+		mapView = new MapView(map);
+	}
+
+	// Check if the map was correctly loaded/created
 	if (!(map->getCountries()->size() > 0))
 	{
 		cout << "Could not load map file" << endl;
@@ -97,38 +130,117 @@ int main()
 		return 1;
 	}
 
-	// Setup the map view
-	mapView = new MapView(map);
 
-	// Ask for the game mode
-	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map", "Please enter a selection of 1 or 2", 1,2);
-	
 
-	if (gameMode == 2)
+	bool inMainMenu = true;
+
+	while (inMainMenu)
 	{
-		mapEditor();
-	}
-	else
-	{
-		// else run the normal game
+		system("cls");
 
-		cout << "Welcome to the Risk game" << endl;
+		// Ask for the game mode
+		int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game \n 4. Configure Game Saving Settings", "Please enter a selection of 1, 2, 3 or 4", 1, 4);
 
-		// Randomize the random number generator using the current time as a seed
-		srand((unsigned int)time(NULL));
 
-		// Setup the number of countries
-		num_Countries = (int)map->getCountries()->size();
+		if (gameMode == 2)
+		{
+			inMainMenu = false;
+			mapEditor();
+		}
+		else if (gameMode == 3)
+		{
+			// load a saved game
+			SaveLoadBuilder* loadBuilder = new RegularLoadGameBuilder();
+			GameSaveAndLoad save;
+			save.setSaveLoadBuilder(loadBuilder);
+			save.ConstructSaveLoadOperation();
+			GameSaveInstance* instance = save.getSave();
+			players = *(instance->createPlayers(map));
+			instance->addArmiesAndPlayersToMap(map);
 
-		queryPlayers();
+			numberPlayers = players.size();
 
-		settingGameLog();// Dependent on Player List must be after queryPlayers();
 
-		assignCountries();
+			// Setup restoring to the saved phase
+			restorePhaseFromSave = true;
 
-		map->notifyObservers();
 
-		runGame();
+			for (int i = 0; i < NUM_PHASES; i++)
+			{
+				if (instance->getPhase() == PHASES[i])
+				{
+					phaseToRestore = i;
+				}
+			}
+
+			for (int i = 0; i < numberPlayers; i++)
+			{
+				// Check if any players are already dead
+				checkPlayerAndKill(players[i]);
+
+				if (instance->getPlayer() == players[i]->GetPlayerName())
+				{
+					playerToRestore = i;
+				}
+			}
+
+			if (phaseToRestore < 0 || playerToRestore < 0)
+			{
+				instance->setError(true, "Invalid phase or player in game save");
+			}
+
+			delete loadBuilder;
+
+			// Setup the number of countries
+			num_Countries = (int)map->getCountries()->size();
+
+
+			inMainMenu = false;
+
+			if (instance->errorOccured())
+			{
+				cout << "Could not load game save. The following error occured: " << instance->getLastError() << endl;
+				system("pause");
+			}
+			else
+			{
+				// All is well, proceed into the game
+				runGame();
+			}
+		}
+		else if (gameMode == 4)
+		{
+			// Give the user the option of configuring how saving the game will be handled
+
+			int option = requestInt("How would you like to configure game saving? Currently selected: " + to_string(gameSavingMode) + "\n 1. Ask for save \n 2. Automatically save \n 3. Never save \n 4. Return to previous menu", "You did not enter a valid number", 1, 4);
+			if (option > 0 && option < 4)
+			{
+				gameSavingMode = option;
+				cout << "Game save option updated" << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			// else run the normal game
+
+			cout << "Welcome to the Risk game" << endl;
+
+			// Setup the number of countries
+			num_Countries = (int)map->getCountries()->size();
+
+			queryPlayers();
+
+			settingGameLog();// Dependent on Player List must be after queryPlayers();
+
+			assignCountries();
+
+			map->notifyObservers();
+
+			inMainMenu = false;
+
+			runGame();
+		}
 	}
 
 	cout << endl << "The game has stopped running" << endl;
@@ -173,21 +285,21 @@ void mapEditor()
 
 			switch (choice)
 			{
-				case 1:
-					addCountry();
-					break;
-				case 2:
-					addContinent();
-					break;
-				case 3:
-					addLink();
-					break;
-				case 4:
-					saveMap();
-					break;
-				case 5:
-					editorRunning = false;
-					break;
+			case 1:
+				addCountry();
+				break;
+			case 2:
+				addContinent();
+				break;
+			case 3:
+				addLink();
+				break;
+			case 4:
+				saveMap();
+				break;
+			case 5:
+				editorRunning = false;
+				break;
 			}
 		}
 		else
@@ -328,13 +440,24 @@ void queryPlayers()
 
 	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
 
+	numberComputerPlayers = requestInt("Please enter the number of computer players", "Please specify between 0 and " + to_string(numberPlayers), 0, numberPlayers);
+
 	// Ask for the player names and use the name to create a new player
 	for (int i = 0; i < numberPlayers; i++)
 	{
-		cout << "Enter the name of player " << i + 1 << endl;
+		bool computerPlayer = (numberPlayers - i) <= numberComputerPlayers;
+		if (computerPlayer)
+		{
+			cout << "Enter the name of computer player " << i + 1 - (numberPlayers - numberComputerPlayers) << endl;
+		}
+		else
+		{
+			cout << "Enter the name of human player " << i + 1 << endl;
+		}
+
 		string playerName;
 		getline(cin, playerName);
-		Player* newPlayer = new Player(playerName, map);
+		Player* newPlayer = new Player(playerName, map, computerPlayer);
 		PlayerView* playerview = new PlayerView(newPlayer);
 		players.push_back(newPlayer);
 	}
@@ -405,6 +528,12 @@ void runGame()
 		// Loop through the players
 		for (int i = 0; i < numberPlayers; i++)
 		{
+			// Restore the player's turn from saved game
+			if (restorePhaseFromSave)
+			{
+				i = playerToRestore;
+			}
+
 			// If the player is dead, skip their turn
 			if (!players[i]->isAlive())
 			{
@@ -412,14 +541,45 @@ void runGame()
 				system("pause");
 				continue;
 			}
-			
-			
+
+
 			// Loop through the phases of the game
 			for (int j = 0; j < NUM_PHASES; j++)
 			{
 				// Display the updated map and player info
 				map->notifyObservers();
 				players[i]->notifyObservers();
+
+				// If loading from save, restore the phase
+				if (restorePhaseFromSave)
+				{
+					restorePhaseFromSave = false;
+					j = phaseToRestore;
+				}
+				else
+				{
+					int option;
+
+					switch (gameSavingMode)
+					{
+					case 1:
+						// Ask for save
+						option = requestInt("Would you like to save the game? \n 1. Yes \n 2. No", "You did not enter a valid option", 1, 2);
+						if (option != 1)
+						{
+							break;
+						}
+					case 2:
+						// Always save
+						saveGame(i, j);
+						break;
+					case 3:
+						// Never save
+						break;
+					default:
+						break;
+					}
+				}
 
 				cout << endl << players[i]->GetPlayerName() << " perform your " << PHASES[j] << " move" << endl;
 
@@ -464,16 +624,7 @@ void runGame()
 
 void playerReinforce(Player* player)
 {
-	vector<Country*> playerCountries;
-
-	// Get all the countries that the player owns
-	for (unsigned i = 0; i < map->getCountries()->size(); i++)
-	{
-		if (map->getCountries()->at(i)->getControllingPlayer() == player)
-		{
-			playerCountries.push_back(map->getCountries()->at(i));
-		}
-	}
+	vector<Country*> playerCountries = player->getCountries();
 
 	// Get the number of reinforcements (atleast 1 army)
 	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
@@ -481,45 +632,60 @@ void playerReinforce(Player* player)
 	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
 	{
-		// Ask for a country to place armies on and ensure it is a valid choice
-		cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
-		cout << "Which country would you like to place some armies on?" << endl;
-
-		string countryName;
-		cin >> countryName;
-
-		Country* country = map->getCountryFromName(countryName.c_str());
-		if (country == NULL)
+		if (player->isComputerPlayer())
 		{
-			cout << "The country you entered does not exists" << endl;
-			system("pause");
-		}
-		else if (country->getControllingPlayer() != player)
-		{
-			cout << "You do not countrol that country" << endl;
-			system("pause");
+			// Random pick a country and add all armies to it
+			int randomCountry = playerCountries.size() > 1 ? rand() % (playerCountries.size() - 1) : 0;
+			playerCountries[randomCountry]->addArmies(numReinforcements);
+
+			cout << "Computer player " << player->GetPlayerName() << " adds " << numReinforcements << " armies to " << playerCountries[randomCountry]->getName() << endl;
+
+			numReinforcements = 0;
 		}
 		else
 		{
-			bool validInput = false;
-			int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
-			
-			// Add the reinforcements to the country
-			country->addArmies(inputArmies);
+			// Ask for a country to place armies on and ensure it is a valid choice
+			cout << player->GetPlayerName() << ", you have " << numReinforcements << " reinforcement armies" << endl;
+			cout << "Which country would you like to place some armies on?" << endl;
 
-			// Remove the armies from available reinforcements
-			numReinforcements -= inputArmies;
+			string countryName;
+			cin >> countryName;
+
+			Country* country = map->getCountryFromName(countryName.c_str());
+			if (country == NULL)
+			{
+				cout << "The country you entered does not exists" << endl;
+				system("pause");
+			}
+			else if (country->getControllingPlayer() != player)
+			{
+				cout << "You do not countrol that country" << endl;
+				system("pause");
+			}
+			else
+			{
+				bool validInput = false;
+				int inputArmies = requestInt("How many armies would you like to place on " + string(country->getName()) + "?", "Please enter a number greater than 0 and less than or equal to " + numReinforcements, 1, numReinforcements);
+
+				// Add the reinforcements to the country
+				country->addArmies(inputArmies);
+
+				// Remove the armies from available reinforcements
+				numReinforcements -= inputArmies;
 
 
-			//Game Log in Reinforcement phase
-			string str = "Sent " + to_string(inputArmies) + " armies to " + countryName;
-			gameLog->LogAction(player->GetPlayerName(), 0, str);
-			if (gameLog->okToPrint(player->GetPlayerName(), 0)) {
-				gameLog->notifyObservers();
+
+
+				//Game Log in Reinforcement phase
+				string str = "Sent " + to_string(inputArmies) + " armies to " + countryName;
+				gameLog->LogAction(player->GetPlayerName(), 0, str);
+				if (gameLog->okToPrint(player->GetPlayerName(), 0)) {
+					gameLog->notifyObservers();
+				}
 			}
 
-
 		}
+
 	}
 }
 
@@ -571,7 +737,7 @@ void playerAttack(Player* player)
 			cout << "You did not enter a valid country" << endl;
 		}
 	}
-	
+
 	validCountry = false;
 
 	// Ask for a country to attack
@@ -617,7 +783,7 @@ void playerAttack(Player* player)
 	}
 
 	Player* enemy = enemyCountry->getControllingPlayer();
-	
+
 	int attackingArmies = playerCountry->getNumArmies();
 	int defendingArmies = enemyCountry->getNumArmies();
 
@@ -670,7 +836,27 @@ void checkPlayerAndKill(Player* player)
 
 void playerFortify(Player* player)
 {
-	int fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
+	// Players need atleast 2 countries to fortify
+	if (player->getCountries().size() < 2)
+	{
+		cout << "You do not have enough countries to fortify" << endl;
+		system("pause");
+	}
+
+	int fortify;
+
+	if (player->isComputerPlayer())
+	{
+		// Computer players never fortify
+		cout << "Computer player " << player->GetPlayerName() << " decides not to fortify" << endl;
+		fortify = 2;
+
+	}
+	else
+	{
+		fortify = requestInt("Would you like to fortify? \n 1. Yes \n 2. No", "Please enter 1 or 2", 1, 2);
+	}
+
 
 	if (fortify == 1)
 	{
@@ -689,7 +875,7 @@ void playerFortify(Player* player)
 			{
 				cout << "You did not enter a valid country" << endl;
 			}
-			else if(country->getControllingPlayer() != player)
+			else if (country->getControllingPlayer() != player)
 			{
 				cout << "You do not control that country" << endl;
 			}
@@ -728,7 +914,7 @@ void playerFortify(Player* player)
 					{
 						cout << "You do not control that country" << endl;
 					}
-					else if(!map->validPlayerPath(country, toCountry, player))
+					else if (!map->validPlayerPath(country, toCountry, player))
 					{
 						cout << "There is no path between the two countries" << endl;
 					}
@@ -789,12 +975,13 @@ int requestInt(string question, string errorMessage, int min, int max)
 
 	return input;
 }
-void settingGameLog() 
+
+void settingGameLog()
 {
 	cout << "Game Log Configuraion" << endl;
 
 	GameLog* gameLog2 = new SimpleGameLog;
-	string playerRestrictQStr= "Restrict Game Log to a single player?\n0. No\n";
+	string playerRestrictQStr = "Restrict Game Log to a single player?\n0. No\n";
 	for (int i = 0; i < players.size(); ++i)
 	{
 		playerRestrictQStr += to_string(i + 1) + ". " + players[i]->GetPlayerName() + "\n";
@@ -805,13 +992,13 @@ void settingGameLog()
 		gameLog1 = gameLog2;
 	}
 	else {
-		gameLog1 = new PlayerGameLog(players[playerRestrictQ-1]->GetPlayerName(), gameLog2);
+		gameLog1 = new PlayerGameLog(players[playerRestrictQ - 1]->GetPlayerName(), gameLog2);
 	}
 	//GameLog* gameLog1 = new PlayerGameLog("p1", gameLog2);
-	int phaseRestrictQ = requestInt("Restrict Game Log to a single phase?\n0. No\n1. Reinforcement\n2. Attack\n3. Fortification","Invalid input, please enter the number corresponding to your selection.", 0, 3);
+	int phaseRestrictQ = requestInt("Restrict Game Log to a single phase?\n0. No\n1. Reinforcement\n2. Attack\n3. Fortification", "Invalid input, please enter the number corresponding to your selection.", 0, 3);
 	switch (phaseRestrictQ) {
 	case 0:
-		gameLog =  gameLog1;
+		gameLog = gameLog1;
 		break;
 	case 1:
 		gameLog = new PhaseGameLog(0, gameLog1);
@@ -825,4 +1012,14 @@ void settingGameLog()
 	}
 	//	gameLog = new PhaseGameLog(0, gameLog1);
 	GameLogView* gameLogView = new GameLogView(gameLog);
+}
+void saveGame(int player, int phase)
+{
+	// Save the game
+	SaveLoadBuilder* saveBuilder = new RegularSaveGameBuilder(map, &players, players[player], PHASES[phase]);
+	GameSaveAndLoad save;
+	save.setSaveLoadBuilder(saveBuilder);
+	save.ConstructSaveLoadOperation();
+	delete saveBuilder;
+
 }

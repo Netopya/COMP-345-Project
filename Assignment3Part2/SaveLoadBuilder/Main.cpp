@@ -14,11 +14,15 @@ using namespace std;
 
 /*
 Michael Bilinsky 26992358
-Mina Abdel Malek 26951791
-Maxime Morin 27501455
 
-COMP 345 Project Intermediate Build
+COMP 345 Assignment 3 Part 2, Game saving
 
+New in the assignment:
+-All relevant files are in the SaveLoad directory
+-The ability to save the current state of the game, and restore the state of the game from a saved file
+-Options to configure if the saving will be automatic, will ask the user, or will never occur
+
+Contains the following features from our group project deliverable:
 -A game of classic risk
 -Can load map from a file
 -Can add countries and continents from a map editor
@@ -27,7 +31,8 @@ COMP 345 Project Intermediate Build
 -Attacking is in a simplified form (no dice implemented)
 -Cards are not yet implemented
 
-See README.txt for Visual Studio compilation information
+Tips:
+-When asked for a map, use "americas.map" for the best experience
 */
 
 int numberPlayers; // Number of players
@@ -35,6 +40,7 @@ vector<Player*> players; // List of players
 const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
 int num_Countries;
+int gameSavingMode = 1;
 
 World* map;
 MapView* mapView; // The map view component
@@ -71,6 +77,11 @@ string queryMapFile(); //Ask for the map file to load
 // Request an integer from the user, showing an error message until they enter a valid number within the bounds
 int requestInt(string question, string errorMessage, int min, int max);
 
+void saveGame(int player, int phase); // Save the game
+bool restorePhaseFromSave = false;
+int phaseToRestore = -1;
+int playerToRestore = -1;
+
 int main()
 {
 	cout << "Welcome to RISK!" << endl;
@@ -94,52 +105,112 @@ int main()
 	// Setup the map view
 	mapView = new MapView(map);
 
-	// Ask for the game mode
-	int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game", "Please enter a selection of 1,2 or 3", 1,3);
+	bool inMainMenu = true;
+
+	while (inMainMenu)
+	{
+		system("cls");
+
+		// Ask for the game mode
+		int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game \n 4. Configure Game Saving Settings", "Please enter a selection of 1, 2, 3 or 4", 1,4);
 	
 
-	if (gameMode == 2)
-	{
-		mapEditor();
+		if (gameMode == 2)
+		{
+			inMainMenu = false;
+			mapEditor();
+		}
+		else if(gameMode == 3)
+		{
+			// load a saved game
+			SaveLoadBuilder* loadBuilder = new RegularLoadGameBuilder();
+			GameSaveAndLoad save;
+			save.setSaveLoadBuilder(loadBuilder);
+			save.ConstructSaveLoadOperation();
+			GameSaveInstance* instance = save.getSave();
+			players = *(instance->createPlayers(map));
+			instance->addArmiesAndPlayersToMap(map);
+			
+			numberPlayers = players.size();
+
+			// Setup restoring to the saved phase
+			restorePhaseFromSave = true;
+			
+			for (int i = 0; i < NUM_PHASES; i++)
+			{
+				if (instance->getPhase() == PHASES[i])
+				{
+					phaseToRestore = i;
+				}
+			}
+
+			for (int i = 0; i < numberPlayers; i++)
+			{
+				// Check if any players are already dead
+				checkPlayerAndKill(players[i]);
+
+				if (instance->getPlayer() == players[i]->GetPlayerName())
+				{
+					playerToRestore = i;
+				}
+			}	
+
+			if (phaseToRestore < 0 || playerToRestore < 0)
+			{
+				instance->setError(true, "Invalid phase or player in game save");
+			}
+
+			delete loadBuilder;
+
+			// Setup the number of countries
+			num_Countries = (int)map->getCountries()->size();
+			
+
+			inMainMenu = false;
+
+			if (instance->errorOccured())
+			{
+				cout << "Could not load game save. The following error occured: " << instance->getLastError() << endl;
+				system("pause");
+			}
+			else
+			{
+				// All is well, proceed into the game
+				runGame();
+			}			
+		}
+		else if (gameMode == 4)
+		{
+			// Give the user the option of configuring how saving the game will be handled
+
+			int option = requestInt("How would you like to configure game saving? Currently selected: " + to_string(gameSavingMode) + "\n 1. Ask for save \n 2. Automatically save \n 3. Never save \n 4. Return to previous menu", "You did not enter a valid number", 1, 4);
+			if (option > 0 && option < 4)
+			{
+				gameSavingMode = option;
+				cout << "Game save option updated" << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			// else run the normal game
+
+			cout << "Welcome to the Risk game" << endl;
+
+			// Setup the number of countries
+			num_Countries = (int)map->getCountries()->size();
+
+			queryPlayers();
+
+			assignCountries();
+
+			map->notifyObservers();
+
+			inMainMenu = false;
+
+			runGame();
+		}
 	}
-	else if(gameMode == 3)
-	{
-		SaveLoadBuilder* loadBuilder = new RegularLoadGameBuilder();
-		GameSaveAndLoad save;
-		save.setSaveLoadBuilder(loadBuilder);
-		save.ConstructSaveLoadOperation();
-		GameSaveInstance* instance = save.getSave();
-		players = *(instance->createPlayers(map));
-		instance->addArmiesAndPlayersToMap(map);
-		
-		delete loadBuilder;
-
-		// Setup the number of countries
-		num_Countries = (int)map->getCountries()->size();
-		numberPlayers = players.size();
-
-		runGame();
-	}
-	else
-	{
-		// else run the normal game
-
-		cout << "Welcome to the Risk game" << endl;
-
-
-
-		// Setup the number of countries
-		num_Countries = (int)map->getCountries()->size();
-
-		queryPlayers();
-
-		assignCountries();
-
-		map->notifyObservers();
-
-		runGame();
-	}
-
 	cout << endl << "The game has stopped running" << endl;
 	system("pause");
 	return 0;
@@ -414,6 +485,12 @@ void runGame()
 		// Loop through the players
 		for (int i = 0; i < numberPlayers; i++)
 		{
+			// Restore the player's turn from saved game
+			if (restorePhaseFromSave)
+			{
+				i = playerToRestore;
+			}
+
 			// If the player is dead, skip their turn
 			if (!players[i]->isAlive())
 			{
@@ -426,6 +503,37 @@ void runGame()
 			// Loop through the phases of the game
 			for (int j = 0; j < NUM_PHASES; j++)
 			{
+				// If loading from save, restore the phase
+				if (restorePhaseFromSave)
+				{
+					restorePhaseFromSave = false;
+					j = phaseToRestore;
+				}
+				else
+				{
+					int option;
+
+					switch (gameSavingMode)
+					{
+					case 1:
+						// Ask for save
+						option = requestInt("Would you like to save the game? \n 1. Yes \n 2. No", "You did not enter a valid option", 1, 2);
+						if (option != 1)
+						{
+							break;
+						}
+					case 2:
+						// Always save
+						saveGame(i, j);
+						break;
+					case 3:
+						// Never save
+						break;
+					default:
+						break;
+					}
+				}
+
 				// Display the updated map and player info
 				map->notifyObservers();
 				players[i]->notifyObservers();
@@ -447,11 +555,7 @@ void runGame()
 
 				system("pause");
 
-				SaveLoadBuilder* saveBuilder = new RegularSaveGameBuilder(map, &players, players[i], PHASES[j]);
-				GameSaveAndLoad save;
-				save.setSaveLoadBuilder(saveBuilder);
-				save.ConstructSaveLoadOperation();
-				delete saveBuilder;
+					
 			}
 		}
 
@@ -777,4 +881,14 @@ int requestInt(string question, string errorMessage, int min, int max)
 	}
 
 	return input;
+}
+
+void saveGame(int player, int phase)
+{
+	// Save the game
+	SaveLoadBuilder* saveBuilder = new RegularSaveGameBuilder(map, &players, players[player], PHASES[phase]);
+	GameSaveAndLoad save;
+	save.setSaveLoadBuilder(saveBuilder);
+	save.ConstructSaveLoadOperation();
+	delete saveBuilder;
 }

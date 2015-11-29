@@ -9,6 +9,13 @@ World::World(const char* _inputFile)
 	lastOperationSuccess = analyseFile();
 }
 
+World::World()
+{
+	lastErrorMessage = NULL;
+	continentsVector = new vector<Continent*>();
+	countriesVector = new vector<Country*>();
+}
+
 bool World::addContinent(const char* _name)
 {
 	lastOperationSuccess = true;
@@ -221,7 +228,11 @@ bool World::validPlayerPath(vector<Country*> investigate, vector<Country*>* visi
 		if (!bvisited)
 		{
 			visited->push_back(investigate[i]);
-			return validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+			bool foundPath = validPlayerPath(*(investigate[i]->getConnectedCountries()), visited, goal, player);
+			if (foundPath)
+			{
+				return true;
+			}
 		}
 	}
 

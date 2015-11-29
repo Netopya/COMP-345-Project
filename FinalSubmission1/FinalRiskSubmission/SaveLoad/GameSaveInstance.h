@@ -19,6 +19,18 @@ struct CountryInfo
 	}
 };
 
+struct PlayerInfo
+{
+	string playerName;
+	bool isAI;
+
+	PlayerInfo(string playerName, bool isAI)
+	{
+		this->playerName = playerName;
+		this->isAI = isAI;
+	}
+};
+
 /*
 The class constructed by the save/load builder, holds an instance of the game
 */
@@ -32,13 +44,14 @@ private:
 public:
 	GameSaveInstance();
 
-	vector<string> players;
+	vector<PlayerInfo*> players;
 	string playerTurn;
 	string phase;
 	vector<CountryInfo*> countryInfos;
 
 	void addCountryInfo(string countryName, string owningPlayer, int numArmies);
-	
+	void addPlayerInfo(string playerName, bool isAI);
+
 	void addArmiesAndPlayersToMap(class World* map);
 	vector<class Player*>* createPlayers(class World* map);
 	string getPhase();
