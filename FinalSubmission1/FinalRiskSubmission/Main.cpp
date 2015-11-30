@@ -440,7 +440,7 @@ void queryPlayers()
 {
 	bool numEntered = false;
 
-	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
+	numberPlayers = requestInt("Please enter the total number of players (human and computer)", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
 
 	numberComputerPlayers = requestInt("Please enter the number of computer players", "Please specify between 0 and " + to_string(numberPlayers), 0, numberPlayers);
 
