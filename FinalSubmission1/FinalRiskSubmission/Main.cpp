@@ -12,6 +12,7 @@
 #include "GameLog\PlayerGameLog.h"
 #include "GameLog\PhaseGameLog.h"
 #include "GameLogView\GameLogView.h"
+#include <algorithm> 
 
 #include "SaveLoad\RegularSaveGameBuilder.h"
 #include "SaveLoad\RegularLoadGameBuilder.h"
@@ -698,25 +699,88 @@ void playerAttack(Player* player)
 	Country* playerCountry = NULL;
 	Country* enemyCountry = NULL;
 
-	// Ask the player for a country to attack with
-	while (!validCountry)
-	{
-		string inCountry;
-		cout << "Enter a country to attack with: " << endl;
-		cin >> inCountry;
+	int continueAttack;
+	bool done = false;
+	bool earnCard = false;
 
-		playerCountry = map->getCountryFromName(inCountry.c_str()); //map.getCountryByName(inCountry);
-		if (playerCountry)
+	while (!done) {
+		continueAttack = requestInt("Continue to Attack phase?\n0. No\n1. Yes", "Invalid Input", 0, 1);
+		done = continueAttack == 0;
+		if (done) break;
+		validCountry = false;
+		cout << "Enter 0 to cancel attack." << endl;
+		// Ask the player for a country to attack with
+		while (!validCountry)
 		{
-			// Check if the player controls that country
-			if (playerCountry->getControllingPlayer() == player)
+			string inCountry;
+			cout << "Enter a country to attack with: " << endl;
+			cin >> inCountry;
+			if (inCountry == "0")break;//Canceled input
+
+			playerCountry = map->getCountryFromName(inCountry.c_str()); //map.getCountryByName(inCountry);
+			if (playerCountry)
 			{
+				// Check if the player controls that country
+				if (playerCountry->getControllingPlayer() == player)
+				{
+					vector<Country*> adjacentCountries(*(playerCountry->getConnectedCountries()));
+
+					// Make sure there are enemies in the adjacent countries
+					for (unsigned i = 0; i < adjacentCountries.size(); i++)
+					{
+						if (adjacentCountries[i]->getControllingPlayer() != player)
+						{
+							validCountry = true;
+							break;
+						}
+
+						if (i == adjacentCountries.size() - 1)
+						{
+							cout << "You cannot attack any enemies from that country" << endl;
+						}
+					}
+				}
+				else
+				{
+					cout << "You do not control that country" << endl;
+				}
+			}
+			else
+			{
+				// Country could not be found
+				cout << "You did not enter a valid country" << endl;
+			}
+		}
+		if (!validCountry)continue;//Canceled input
+		validCountry = false;
+
+		// Ask for a country to attack
+		while (!validCountry)
+		{
+			string inCountry;
+			cout << "Enter a country to attack: " << endl;
+			//list  neighbouring countries
+
+			cin >> inCountry;
+			if (inCountry == "0")break;//Canceled input
+			enemyCountry = map->getCountryFromName(inCountry.c_str());
+
+			// Ensure the country is valid
+			if (enemyCountry)
+			{
+				// Ensure the country is an enemy
+				if (enemyCountry->getControllingPlayer() == player)
+				{
+					cout << "You cannot attack your own country" << endl;
+					continue;
+				}
+
 				vector<Country*> adjacentCountries(*(playerCountry->getConnectedCountries()));
 
-				// Make sure there are enemies in the adjacent countries
+				// Make sure that the player can attack that country from the selected country
 				for (unsigned i = 0; i < adjacentCountries.size(); i++)
 				{
-					if (adjacentCountries[i]->getControllingPlayer() != player)
+					if (adjacentCountries[i] == enemyCountry)
 					{
 						validCountry = true;
 						break;
@@ -724,98 +788,209 @@ void playerAttack(Player* player)
 
 					if (i == adjacentCountries.size() - 1)
 					{
-						cout << "You cannot attack any enemies from that country" << endl;
+						cout << "You cannot attack that enemy from your country" << endl;
 					}
 				}
 			}
 			else
 			{
-				cout << "You do not control that country" << endl;
+				cout << "You did not enter a valid country" << endl;
 			}
+		}
+		if (!validCountry)continue; //Canceled input
+
+		Player* enemy = enemyCountry->getControllingPlayer();
+
+		int attackingArmies = playerCountry->getNumArmies();
+		int defendingArmies = enemyCountry->getNumArmies();
+
+
+		//Game Log in Attack phase
+		string str = "Sent an Attack from" + string(playerCountry->getName()) + " onto target country: " + string(enemyCountry->getName());
+		gameLog->LogAction(player->GetPlayerName(), 1, str);
+		if (gameLog->okToPrint(player->GetPlayerName(), 1)) {
+			gameLog->notifyObservers();
+		}
+		/*
+		// Very simple attacking logic, if the attacker has more armies they win, else they lose
+		if (attackingArmies > defendingArmies)
+		{
+			enemyCountry->setControllingPlayer(player);
+			map->notifyObservers();
+			cout << "You took over the country!" << endl;
+			player->addWin();
 		}
 		else
 		{
-			// Country could not be found
-			cout << "You did not enter a valid country" << endl;
+			playerCountry->setControllingPlayer(enemyCountry->getControllingPlayer());
+			map->notifyObservers();
+			cout << "You lost the battle and the enemy has taken over the country!" << endl;
+			enemy->addWin();
 		}
-	}
+		*/
 
-	validCountry = false;
+		//Battle Step
+		bool battleDone = false;
+		std::vector<int> activeDice;
+		std::vector<int> defDice;
+		bool autoplay = false;
+		int activeInput;
+		bool activeDone = false;
+		int defInput;
+		bool defDone = false;
+		int lastDiceRollCount;
 
-	// Ask for a country to attack
-	while (!validCountry)
-	{
-		string inCountry;
-		cout << "Ever a country to attack: " << endl;
-		cin >> inCountry;
-
-		enemyCountry = map->getCountryFromName(inCountry.c_str());
-
-		// Ensure the country is valid
-		if (enemyCountry)
+		while (!battleDone)
 		{
-			// Ensure the country is an enemy
-			if (enemyCountry->getControllingPlayer() == player)
-			{
-				cout << "You cannot attack your own country" << endl;
-				continue;
+			if (playerCountry->getNumArmies() < 2) {   //Lose Condition
+				std::cout << "Defeated: " << playerCountry->getName() << "  can no longer attack." << std::endl;
+				battleDone = true;
+				break;
 			}
+			else if (enemyCountry->getNumArmies() < 1) { //Win Condition
+				std::cout << "Conquered WIN" << std::endl;
+				std::cout << "Move " << lastDiceRollCount << " or more Armies into the conquered country" << std::endl;
+				earnCard = true;
+				enemyCountry->addArmies(lastDiceRollCount);
+				playerCountry->removeArmies(lastDiceRollCount);
+				enemyCountry->setControllingPlayer(player);
 
-			vector<Country*> adjacentCountries(*(playerCountry->getConnectedCountries()));
 
-			// Make sure that the player can attack that country from the selected country
-			for (unsigned i = 0; i < adjacentCountries.size(); i++)
-			{
-				if (adjacentCountries[i] == enemyCountry)
+				battleDone = true;
+				break;
+			}
+			//Manual Play Active player Input
+			if (!autoplay) {
+				string activeBattleQ = "0. End Battle Step\n1. Send 1 Army to attack\n2. Send 2 Armies to attack\n3. Send 3 Armies to attack\n4. Autoplay";
+				activeInput = requestInt(activeBattleQ, "Invalid Input", 0, 4);
+				//displayedOptions = 5;
+				//Input Validation
+				while (!activeDone)
 				{
-					validCountry = true;
-					break;
+					if (activeInput == 0)
+					{
+						activeDone = true; done = true;
+					}
+					if (activeInput == 1 && playerCountry->getNumArmies() < 2)
+					{
+						std::cout << "Not enough Reinforcments" << std::endl;
+					}
+					else { activeDone = true; }
+					if (activeInput == 2 && playerCountry->getNumArmies() < 3)
+					{
+						std::cout << "Not enough Reinforcements" << std::endl;
+					}
+					else { activeDone = true; }
+					if (activeInput == 3 && playerCountry->getNumArmies() < 4)
+					{
+						std::cout << "Not enough Reinforcements" << std::endl;
+					}
+					else { activeDone = true; }
+					if (activeInput == 4)
+					{
+						autoplay = true; activeDone = true;
+					}
 				}
 
-				if (i == adjacentCountries.size() - 1)
+			}
+
+			//Defending player Manual Input
+			if (!autoplay&& !battleDone)
+			{
+				string defBattleQ = "1. Send 1 Army to defend\n2. Send 2 Armies to defend\n3. Autoplay";
+				defInput = requestInt(defBattleQ, "Invalid Input", 0, 3);
+				//displayedOptions = 4;
+				//Input Validation
+				while (!defDone)
 				{
-					cout << "You cannot attack that enemy from your country" << endl;
+
+						//if(defInput== 0)
+						//{defDone=true;done=true;}
+						if (defInput == 1 && enemyCountry->getNumArmies() < 1)
+						{
+							std::cout << "Not enough troops" << std::endl;
+						}
+						else
+							if (defInput == 2 && enemyCountry->getNumArmies() < 2)
+							{
+								std::cout << "Not enough troops" << std::endl;
+							}
+							else { defDone = true; }
+							if (defInput == 3)
+							{
+								autoplay = true; defDone = true;
+							}
+					
 				}
 			}
+			//reset for next battle roll
+			activeDone = false;
+			defDone = false;
+			//Manual play Dice Roll
+			if (!autoplay && !done) {
+
+				std::cout << "  - - - " << activeInput << std::endl;
+				for (int i = 0; i < activeInput; i++) {
+					int die = (rand() % 6) + 1;
+					std::cout << "Active Player Rolled: " << die << std::endl;
+					activeDice.push_back(die);
+				}
+				for (int i = 0; i < defInput; i++) {
+					int die = (rand() % 6) + 1;
+					std::cout << "Defending Player Rolled: " << die << std::endl;
+					defDice.push_back(die);
+				}
+
+			}
+			else if (!done) {
+				//Automatic Dice Roll
+				for (int i = 0; i < std::min(3, playerCountry->getNumArmies() - 1); i++) {
+					int die = (rand() % 6) + 1;
+					std::cout << "Active: " << die << std::endl;
+					activeDice.push_back(die);
+				}
+				for (int i = 0; i < std::min(2, enemyCountry->getNumArmies()); i++) {
+					int die = (rand() % 6) + 1;
+					std::cout << "Defending: " << die << std::endl;
+					defDice.push_back(die);
+				}
+				lastDiceRollCount = activeDice.size();
+
+			}
+			//Sorting in Increasing Order usin std::sort default '<' comparison
+			std::sort(activeDice.begin(), activeDice.end());
+			std::sort(defDice.begin(), defDice.end());
+			//Comparing Active and Defending player greatest dice roll value found at the end of the vector because of std::sort
+			while (!activeDice.empty() && !defDice.empty()) // loop for multiple dice roll in single battle
+			{
+				int activeRoll = activeDice.back();
+				activeDice.pop_back(); // removing used dice
+				int defRoll = defDice.back();
+				defDice.pop_back(); // removing used dice
+				if (activeRoll > defRoll) {
+	
+					enemyCountry->removeArmies(1);
+					std::cout << "Defending country lost an army D: " << enemyCountry->getNumArmies() << " A: " << playerCountry->getNumArmies() << std::endl;;
+				}
+				else {
+					playerCountry->removeArmies(1);
+					std::cout << "Atacking country lost an army A: " << playerCountry->getNumArmies() << " D: " << enemyCountry->getNumArmies() << std::endl;
+				}
+			}
+			//clear unused dice emptying the vector. 
+			activeDice.erase(activeDice.begin(), activeDice.end());
+			defDice.erase(defDice.begin(), defDice.end());
 		}
-		else
-		{
-			cout << "You did not enter a valid country" << endl;
-		}
+
+
+		// Check if any of the players involved have been eliminated
+		checkPlayerAndKill(player);
+		checkPlayerAndKill(enemy);
+
+
+
 	}
-
-	Player* enemy = enemyCountry->getControllingPlayer();
-
-	int attackingArmies = playerCountry->getNumArmies();
-	int defendingArmies = enemyCountry->getNumArmies();
-
-
-	//Game Log in Attack phase
-	string str = "Sent an Attack from" + string(playerCountry->getName()) + " onto target country: " + string(enemyCountry->getName());
-	gameLog->LogAction(player->GetPlayerName(), 1, str);
-	if (gameLog->okToPrint(player->GetPlayerName(), 1)) {
-		gameLog->notifyObservers();
-	}
-
-	// Very simple attacking logic, if the attacker has more armies they win, else they lose
-	if (attackingArmies > defendingArmies)
-	{
-		enemyCountry->setControllingPlayer(player);
-		map->notifyObservers();
-		cout << "You took over the country!" << endl;
-		player->addWin();
-	}
-	else
-	{
-		playerCountry->setControllingPlayer(enemyCountry->getControllingPlayer());
-		map->notifyObservers();
-		cout << "You lost the battle and the enemy has taken over the country!" << endl;
-		enemy->addWin();
-	}
-
-	// Check if any of the players involved have been eliminated
-	checkPlayerAndKill(player);
-	checkPlayerAndKill(enemy);
+	//@TODO Give card if atleast one country was conquered.  earnCard is true if atleast one country was conquered.
 }
 
 void checkPlayerAndKill(Player* player)

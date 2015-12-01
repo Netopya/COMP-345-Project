@@ -9,7 +9,7 @@ Country::Country(const char* _name, int _registryValue)
 	continent = NULL;
 	name = _name;
 	registryValue = _registryValue;
-	numArmies = 0;
+	numArmies = 1;
 }
 void Country::setCartesian(int _positionX, int _positionY)
 {
