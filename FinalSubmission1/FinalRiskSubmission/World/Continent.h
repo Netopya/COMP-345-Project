@@ -7,10 +7,12 @@ class Continent
 {	
 	const char* name;
 	int registryValue;
+	int controlValue;
 
 public:
-	Continent(const char*, int);
+	Continent(const char*, int, int);
 	const char* getName();
 	int getRegistryValue();
+	int getControlValue();
 };
 #endif

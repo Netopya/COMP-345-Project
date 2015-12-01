@@ -1,9 +1,10 @@
 #include "Continent.h"
 
-Continent::Continent(const char* _name, int _registryValue)
+Continent::Continent(const char* _name, int _registryValue, int _controlValue)
 {
 	name = _name;
 	registryValue = _registryValue;
+	controlValue = _controlValue;
 }
 const char* Continent::getName()
 {
@@ -12,4 +13,9 @@ const char* Continent::getName()
 int Continent::getRegistryValue()
 {
 	return registryValue;
+}
+
+int Continent::getControlValue()
+{
+	return controlValue;
 }

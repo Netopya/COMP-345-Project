@@ -16,7 +16,7 @@ World::World()
 	countriesVector = new vector<Country*>();
 }
 
-bool World::addContinent(const char* _name)
+bool World::addContinent(const char* _name, int _controlValue)
 {
 	lastOperationSuccess = true;
 	//We cannot allow 2 times the same name.
@@ -27,7 +27,7 @@ bool World::addContinent(const char* _name)
 		return false;
 	}
 	//Create the object with a +1 registry Value.
-	Continent* continentObject = new Continent(_name, (int)continentsVector->size());
+	Continent* continentObject = new Continent(_name, (int)continentsVector->size(), _controlValue);
 	//Once we have the infos of one, we add it to our vector.
 	continentsVector->push_back(continentObject);
 	return true;
@@ -126,7 +126,7 @@ bool World::toFile(const char* _outputFile)
 		{
 			writer->writeMultipleFormats("[Continents=%u]\n", continentsVector->size());
 			for (int i = 0; i < continentsVector->size(); i++)
-				writer->writeMultipleFormats("%n=%u\n", continentsVector->at(i)->getName(), continentsVector->at(i)->getRegistryValue());
+				writer->writeMultipleFormats("%n=%u,%u\n", continentsVector->at(i)->getName(), continentsVector->at(i)->getRegistryValue(), continentsVector->at(i)->getControlValue());
 			writer->writeMultipleFormats("[Territories=%u]\n", countriesVector->size());
 			for (int i = 0; i < countriesVector->size(); i++)
 				writer->writeMultipleFormats("%n=%u\n", countriesVector->at(i)->getName(), countriesVector->at(i)->getRegistryValue());
@@ -263,9 +263,10 @@ bool World::analyseFile()
 			{
 				char* continentInfo;
 				int* registryValue;
+				int* controlValue;
 				//We want to put in memory the name of it until an '=' an then its reference value (a.k.a. registryValue).
-				reader->getMultipleFormats("%l==%u\n", &continentInfo, &registryValue);
-				Continent* continentObject = new Continent(continentInfo, *registryValue);
+				reader->getMultipleFormats("%l==%u,%u\n", &continentInfo, &registryValue, &controlValue);
+				Continent* continentObject = new Continent(continentInfo, *registryValue, *controlValue);
 				//Once we have the infos of one, we add it to our vector.
 				continentsVector->push_back(continentObject);
 			}

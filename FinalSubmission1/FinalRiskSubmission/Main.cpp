@@ -343,8 +343,12 @@ void addContinent()
 	string* continentName = new string();
 	cout << "What is the name of the new continent?" << endl;
 	getline(cin, *continentName);
+	
+	string controlValue;
+	cout << "What is its control value?" << endl;
+	getline(cin, controlValue);
 
-	bool success = map->addContinent(continentName->c_str());
+	bool success = map->addContinent(continentName->c_str(), stoi(controlValue));
 	if (!success)
 	{
 		cout << map->getLastErrorMessage() << endl;

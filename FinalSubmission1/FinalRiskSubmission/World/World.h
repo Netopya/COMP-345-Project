@@ -41,7 +41,7 @@ public:
 	World(const char* _inputFile);
 	World();
 
-	bool addContinent(const char* _name);
+	bool addContinent(const char* _name, int _controlValue);
 	bool addCountry(const char* _name, const char* _continent);
 	bool addLink(const char* _country, vector<const char*>* linkedCountries);
 	bool checkLastOperationSuccess();
