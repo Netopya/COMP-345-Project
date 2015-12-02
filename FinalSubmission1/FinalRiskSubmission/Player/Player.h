@@ -23,6 +23,11 @@ private:
 	class World* map;
 	int wins;
 public:
+
+	int numInfantryCards;
+	int numCavalryCards;
+	int numArtilleryCards;	
+
 	Player(string, World*, bool);
 	string GetPlayerName();
 	/*
@@ -43,5 +48,16 @@ public:
 	 * Get controlled continents.
 	 */
 	vector<class Continent*> getContinents();
+
+	void addRandomCard();
+	int numCards() const;
+	int getNumInfantryCards() const;
+	int getNumCavalryCards() const;
+	int getNumArtilleryCards() const;
+	bool hasThreeDifferent() const;
+	bool hasTreeSame() const;
+	void removeThreeDifferent();
+	void removeThreeSame(int index);
+
 };
 #endif

@@ -96,3 +96,80 @@ vector<Continent*> Player::getContinents()
 
 	return continents;
 }
+
+void Player::addRandomCard()
+{
+	int card = rand() % 2;
+
+	switch (card)
+	{
+	case 0:
+		numInfantryCards++;
+		cout << GetPlayerName() << " has gained an infantry card" << endl;
+		break;
+	case 1:
+		numCavalryCards++;
+		cout << GetPlayerName() << " has gained a cavalry card" << endl;
+		break;
+	case 2:
+		numArtilleryCards++;
+		
+		cout << GetPlayerName() << " has gained an artillery card" << endl;
+		break;
+	}
+}
+
+int Player::numCards() const
+{
+	return numInfantryCards + numCavalryCards + numArtilleryCards;;
+}
+
+int Player::getNumInfantryCards() const
+{
+	return numInfantryCards;
+}
+
+int Player::getNumCavalryCards() const
+{
+	return numCavalryCards;
+}
+
+int Player::getNumArtilleryCards() const
+{
+	return numArtilleryCards;
+}
+
+bool Player::hasThreeDifferent() const
+{
+	return numInfantryCards > 0 && numCavalryCards > 0 && numArtilleryCards > 0;
+}
+
+bool Player::hasTreeSame() const
+{
+	return numInfantryCards > 2 || numCavalryCards > 2 || numArtilleryCards > 2;
+}
+
+void Player::removeThreeDifferent()
+{
+	numInfantryCards--;
+	numCavalryCards--;
+	numArtilleryCards--;
+}
+
+void Player::removeThreeSame(int index)
+{
+	switch (index)
+	{
+	case 0:
+		numInfantryCards -= 3;
+		break;
+	case 1:
+		numCavalryCards -= 3;
+		break;
+	case 2:
+		numArtilleryCards -= 3;
+		break;
+	default:
+		break;
+	}
+}

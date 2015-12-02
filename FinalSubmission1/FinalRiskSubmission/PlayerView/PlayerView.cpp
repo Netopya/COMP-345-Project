@@ -15,6 +15,7 @@ void PlayerView::update(MyObservable* observable)
 		cout << "Player name: " << player->GetPlayerName() << endl;
 		cout << "Number of armies: " << player->getNumArmies() << endl;
 		cout << "Number of battles one: " << player->getNumWins() << endl;
+		cout << "Cards: " << player->getNumInfantryCards() << " Infantry, " << player->getNumCavalryCards() << " Cavalry, " << player->getNumArtilleryCards() << " Artillery" << endl;
 		cout << "Countries controlled: " << endl;
 
 		vector<Country*> countries = player->getCountries();

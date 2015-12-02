@@ -68,6 +68,8 @@ void runGame();
 
 // Allow the player to perform their reinforcement move
 void playerReinforce(Player*);
+void askPlayerForCardType(Player*);
+
 
 // Allow the player to perform their attack move
 void playerAttack(Player*);
@@ -636,6 +638,46 @@ void playerReinforce(Player* player)
 	// Get the number of reinforcements (atleast 1 army)
 	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
 
+	bool validCard = false;
+
+	while (!validCard)
+	{
+		if (!player->hasThreeDifferent() && !player->hasTreeSame())
+		{
+			cout << "You cannot play any cards" << endl;
+			break;
+		}
+
+		if (player->numCards() > 4)
+		{
+			cout << "You must play 3 cards" << endl;
+		}
+		else
+		{
+			int playCard = requestInt("Would you like to play some cards? \n 1. Yes \n 2. No", "You did not enter a 1 or 2", 1, 2);
+
+			if (playCard == 2)
+			{
+				break;
+			}
+		}
+
+		if (player->hasThreeDifferent() && player->hasTreeSame())
+		{
+			int playSameOrDifferent = requestInt("Would you like to play 1 card of each type or 3 cards of the same type? \n 1. 1 card of each type \n 2. 3 cards of the same type", "You did not enter a 1 or 2", 1, 2);
+
+			if (playSameOrDifferent == 1) 
+			{
+				player->removeThreeDifferent();
+			}
+			else
+			{
+
+			}
+		}
+	}
+	
+
 	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
 	{
@@ -994,6 +1036,11 @@ void playerAttack(Player* player)
 
 
 	}
+
+	if (earnCard)
+	{
+		player->addRandomCard();
+	}
 	//@TODO Give card if atleast one country was conquered.  earnCard is true if atleast one country was conquered.
 }
 
@@ -1203,5 +1250,10 @@ void saveGame(int player, int phase)
 	save.setSaveLoadBuilder(saveBuilder);
 	save.ConstructSaveLoadOperation();
 	delete saveBuilder;
+
+}
+
+void askPlayerForCardType(Player* players)
+{
 
 }
