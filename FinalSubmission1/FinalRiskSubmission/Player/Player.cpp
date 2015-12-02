@@ -100,6 +100,9 @@ vector<Continent*> Player::getContinents()
 
 void Player::setStrat(Strategy* type)
 {
+	if (strat != nullptr) {
+		delete strat;
+	}
 	strat = type;
 }
 string Player::executeStrategy()

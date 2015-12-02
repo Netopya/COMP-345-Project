@@ -867,7 +867,7 @@ void playerAttack(Player* player)
 
 
 		//Game Log in Attack phase
-		string str = "Sent an Attack from" + string(playerCountry->getName()) + " onto target country: " + string(enemyCountry->getName());
+		string str = "Sent an Attack from " + string(playerCountry->getName()) + " onto target country: " + string(enemyCountry->getName());
 		gameLog->LogAction(player->GetPlayerName(), 1, str);
 		if (gameLog->okToPrint(player->GetPlayerName(), 1)) {
 			gameLog->notifyObservers();
