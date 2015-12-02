@@ -1144,6 +1144,11 @@ void playerFortify(Player* player)
 			{
 				cout << "You do not control that country" << endl;
 			}
+			else if (country->getNumArmies() < 2)
+			{
+				// Can't leave 0 armies in a country
+				cout << "There are not enough armies in that country" << endl;
+			}
 			else
 			{
 				bool canMove = false;
