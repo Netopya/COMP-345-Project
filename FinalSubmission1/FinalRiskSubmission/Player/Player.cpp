@@ -57,6 +57,11 @@ bool Player::isComputerPlayer() const
 	return computerPlayer;
 }
 
+Strategy * Player::getStrategy() const
+{
+	return strat;
+}
+
 vector<Country*> Player::getCountries()
 {
 	vector<Country*> countries;

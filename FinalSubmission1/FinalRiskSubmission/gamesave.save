@@ -1,14 +1,14 @@
 PLAYERINFO 2
-p1 0 0 0 0 0
-p2 0 0 0 0 0
-GAMEINFO p1 Reinforcement
+Michael 0 0 0 0 0 NONE
+Paul 0 0 0 0 0 NONE
+GAMEINFO Michael Attack
 WORLDINFO 9
-Canada p2 1
-USA p1 1
-Mexico p1 1
-Bahamas p1 1
-Greenland p2 1
-Bermuda p1 1
-Venezuela p2 1
-Brazil p2 1
-Peru p2 1
+Canada Paul 1
+USA Michael 2
+Mexico Michael 1
+Bahamas Paul 1
+Greenland Paul 1
+Bermuda Michael 1
+Venezuela Paul 1
+Brazil Michael 1
+Peru Paul 1

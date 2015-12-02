@@ -44,6 +44,8 @@ public:
 	int getNumWins() const;
 	void addWin();
 	bool isComputerPlayer() const;
+	Strategy* getStrategy() const;
+
 	/*
 	 * Get controlled countries.
 	 */

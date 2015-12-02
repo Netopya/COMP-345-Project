@@ -83,6 +83,11 @@ void Country::addArmies(int armies)
 	numArmies += armies;
 }
 
+void Country::setArmies(int armies)
+{
+	this->numArmies = armies;
+}
+
 void Country::removeArmies(int armies)
 {
 	numArmies -= armies;

@@ -2,6 +2,9 @@
 
 #include "Aggro.h"
 
+const string Strategy::AGGROID = "AGGRO";
+const string Strategy::NONEID = "NONE";
+
 string Aggro::executeSource(std::vector<Country*>  occupied)
 {
 	Player* playerID = occupied[0]->getControllingPlayer();

@@ -565,12 +565,23 @@ void runGame()
 				map->notifyObservers();
 				StatsView *v = new StatsView(players[i]);
 				PercentageOfWorld *s = new PercentageOfWorld(v, players[i]->getCountries().size() / num_Countries);
-				PercentageOfBattlesWon *b = new PercentageOfBattlesWon(s, 0.7);
+				
 
-				NumOfReinforcments *c = new NumOfReinforcments(b, 200);
+				int totalBattles = 0; 
+
+				for (unsigned k = 0; k < players.size(); k++)
+				{
+					totalBattles += players[k]->getNumWins();
+				}
+
+				PercentageOfBattlesWon *b = new PercentageOfBattlesWon(s, totalBattles > 0 ? players[i]->getNumWins() / totalBattles : 0);
+				NumOfReinforcments *c = new NumOfReinforcments(b, players[i]->getNumArmies());
 				NumOfBattlesWon *w = new NumOfBattlesWon(b, players[i]->getNumWins());
 
-				s->printStats();
+				v->printStats();
+
+				delete v, s, b, c, w;
+
 				players[i]->notifyObservers();
 
 				// If loading from save, restore the phase
@@ -1174,7 +1185,8 @@ void playerFortify(Player* player)
 					}
 					else
 					{
-						int armyTransfer = requestInt("How many armies would you like to transfer?", "Please enter a number between 0 and " + country->getNumArmies(), 0, country->getNumArmies());
+						// Must leave at least one army
+						int armyTransfer = requestInt("How many armies would you like to transfer?", "Please enter a number between 0 and " + (country->getNumArmies() - 1), 0, country->getNumArmies() - 1);
 
 						// Remove the armies from the "from" country and move them to the "to" country
 						country->removeArmies(armyTransfer);

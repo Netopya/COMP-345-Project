@@ -60,6 +60,8 @@ public:
 
 	void addArmies(int armies);
 
+	void setArmies(int armies);
+
 	void removeArmies(int armies);
 
 };

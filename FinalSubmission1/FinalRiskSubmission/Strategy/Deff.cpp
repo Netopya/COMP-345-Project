@@ -2,6 +2,8 @@
 
 #include "Deff.h"
 
+const string Strategy::DEFFID = "DEFF";
+
 string Deff::executeSource(std::vector<Country*>  occupied)
 {
 	bool sourceCountry = true;

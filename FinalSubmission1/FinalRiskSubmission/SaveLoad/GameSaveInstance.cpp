@@ -28,9 +28,9 @@ void GameSaveInstance::addCountryInfo(string countryName, string owningPlayer, i
 	countryInfos.push_back(countryInfo);
 }
 
-void GameSaveInstance::addPlayerInfo(string playerName, bool isAI, int soldiers, int cavalry, int artillery, int cardBonus)
+void GameSaveInstance::addPlayerInfo(string playerName, bool isAI, int soldiers, int cavalry, int artillery, int cardBonus, string strategy)
 {
-	PlayerInfo* playerInfo = new PlayerInfo(playerName, isAI, soldiers, cavalry, artillery, cardBonus);
+	PlayerInfo* playerInfo = new PlayerInfo(playerName, isAI, soldiers, cavalry, artillery, cardBonus, strategy);
 	players.push_back(playerInfo);
 }
 
@@ -49,7 +49,7 @@ void GameSaveInstance::addArmiesAndPlayersToMap(World * map)
 
 		country->setControllingPlayer(getPlayerByName(countryInfos[i]->owningPlayer));
 
-		country->addArmies(countryInfos[i]->numArmies);
+		country->setArmies(countryInfos[i]->numArmies);
 	}
 }
 

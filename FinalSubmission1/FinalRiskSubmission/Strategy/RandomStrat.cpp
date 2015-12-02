@@ -2,6 +2,8 @@
 
 #include"RandomStrat.h"
 
+const string Strategy::RANDOMID = "RAMDOM";
+
 	string RandomStrat::executeSource( std::vector<Country*>  occupied) 
 	{
 		bool done = false;

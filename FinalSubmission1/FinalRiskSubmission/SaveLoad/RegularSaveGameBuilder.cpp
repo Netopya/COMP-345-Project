@@ -2,7 +2,7 @@
 #include "..\Player\Player.h"
 #include "..\World\World.h"
 #include "..\World\Country.h"
-
+#include "..\Strategy\Strategy.h"
 
 RegularSaveGameBuilder::RegularSaveGameBuilder(World* map, vector<Player*>* players, Player* playerTurn, string phase)
 {
@@ -25,7 +25,17 @@ void RegularSaveGameBuilder::buildPlayers()
 	// Write the names of the players
 	for (unsigned i = 0; i < players->size(); i++)
 	{
-		file << encodeString(players->at(i)->GetPlayerName()) << ' ' << players->at(i)->isComputerPlayer() << ' ' << players->at(i)->getNumSoldiers() << ' ' << players->at(i)->getNumCavalry() << ' ' << players->at(i)->getNumArtillery() << ' ' << players->at(i)->getCardBonus() << endl;
+		Strategy* strat = players->at(i)->getStrategy();
+		string stratID = strat == nullptr ? Strategy::NONEID : strat->getID();
+
+		file << encodeString(players->at(i)->GetPlayerName()) << ' ' 
+			<< players->at(i)->isComputerPlayer() << ' ' 
+			<< players->at(i)->getNumSoldiers() << ' '
+			<< players->at(i)->getNumCavalry() << ' '
+			<< players->at(i)->getNumArtillery() << ' '
+			<< players->at(i)->getCardBonus() << ' '
+			<< stratID
+			<< endl;
 	}
 }
 

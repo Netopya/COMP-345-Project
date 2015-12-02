@@ -27,8 +27,9 @@ struct PlayerInfo
 	int cavalry;
 	int artillery;
 	int cardBonus;
+	string strategy;
 
-	PlayerInfo(string playerName, bool isAI, int soldiers, int cavalry, int artillery, int cardBonus)
+	PlayerInfo(string playerName, bool isAI, int soldiers, int cavalry, int artillery, int cardBonus, string strat)
 	{
 		this->playerName = playerName;
 		this->isAI = isAI;
@@ -36,6 +37,7 @@ struct PlayerInfo
 		this->cavalry = cavalry;
 		this->artillery = artillery;
 		this->cardBonus = cardBonus;
+		this->strategy = strat;
 	}
 };
 
@@ -58,7 +60,7 @@ public:
 	vector<CountryInfo*> countryInfos;
 
 	void addCountryInfo(string countryName, string owningPlayer, int numArmies);
-	void addPlayerInfo(string playerName, bool isAI, int, int, int, int);
+	void addPlayerInfo(string playerName, bool isAI, int, int, int, int, string);
 
 	void addArmiesAndPlayersToMap(class World* map);
 	vector<class Player*>* createPlayers(class World* map);
