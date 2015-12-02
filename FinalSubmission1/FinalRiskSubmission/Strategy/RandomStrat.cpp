@@ -35,3 +35,8 @@
 		return adjacentCountries[target]->getName();
 	}
 
+	string RandomStrat::getID()
+	{
+		return RANDOMID;
+	}
+

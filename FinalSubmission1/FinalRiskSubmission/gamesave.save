@@ -1,14 +1,14 @@
 PLAYERINFO 2
-Michael~B 0
-Alex~Fallli~hoho 0
-GAMEINFO Michael~B Attack
+p1 0 0 0 0 0
+p2 0 0 0 0 0
+GAMEINFO p1 Reinforcement
 WORLDINFO 9
-Canada Alex~Fallli~hoho 0
-USA Michael~B 1
-Mexico Alex~Fallli~hoho 0
-Bahamas Michael~B 0
-Greenland Michael~B 0
-Bermuda Alex~Fallli~hoho 0
-Venezuela Michael~B 0
-Brazil Alex~Fallli~hoho 0
-Peru Alex~Fallli~hoho 0
+Canada p2 1
+USA p1 1
+Mexico p1 1
+Bahamas p1 1
+Greenland p2 1
+Bermuda p1 1
+Venezuela p2 1
+Brazil p2 1
+Peru p2 1

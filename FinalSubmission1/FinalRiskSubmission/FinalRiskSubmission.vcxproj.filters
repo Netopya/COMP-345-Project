@@ -190,6 +190,9 @@
     <ClCompile Include="Strategy\RandomStrat.cpp">
       <Filter>Strategy</Filter>
     </ClCompile>
+    <ClCompile Include="A3.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MapRessourceFiles\americas.map">

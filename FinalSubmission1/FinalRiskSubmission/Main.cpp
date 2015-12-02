@@ -22,6 +22,7 @@
 #include "SaveLoad\RegularLoadGameBuilder.h"
 #include "SaveLoad\GameSaveAndLoad.h"
 
+#include "A3.h"
 
 using namespace std;
 
@@ -452,9 +453,9 @@ void queryPlayers()
 {
 	bool numEntered = false;
 
-	numberPlayers = requestInt("Please enter the total number of players (human and computer)", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
+	numberPlayers = requestInt("Please enter the number of players", "Please specify between 2 and " + to_string(num_Countries) + " players", 2, num_Countries);
 
-	numberComputerPlayers = requestInt("Please enter the number of computer players", "Please specify between 0 and " + to_string(numberPlayers), 0, numberPlayers);
+	numberComputerPlayers = 0;//requestInt("Please enter the number of computer players", "Please specify between 0 and " + to_string(numberPlayers), 0, numberPlayers);
 
 	// Ask for the player names and use the name to create a new player
 	for (int i = 0; i < numberPlayers; i++)
@@ -466,7 +467,7 @@ void queryPlayers()
 		}
 		else
 		{
-			cout << "Enter the name of human player " << i + 1 << endl;
+			cout << "Enter the name of player " << i + 1 << endl;
 		}
 
 		string playerName;
@@ -562,6 +563,14 @@ void runGame()
 			{
 				// Display the updated map and player info
 				map->notifyObservers();
+				StatsView *v = new StatsView(players[i]);
+				PercentageOfWorld *s = new PercentageOfWorld(v, players[i]->getCountries().size() / num_Countries);
+				PercentageOfBattlesWon *b = new PercentageOfBattlesWon(s, 0.7);
+
+				NumOfReinforcments *c = new NumOfReinforcments(b, 200);
+				NumOfBattlesWon *w = new NumOfBattlesWon(b, players[i]->getNumWins());
+
+				s->printStats();
 				players[i]->notifyObservers();
 
 				// If loading from save, restore the phase

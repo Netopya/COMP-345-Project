@@ -25,7 +25,7 @@ void RegularSaveGameBuilder::buildPlayers()
 	// Write the names of the players
 	for (unsigned i = 0; i < players->size(); i++)
 	{
-		file << encodeString(players->at(i)->GetPlayerName()) << ' ' << players->at(i)->isComputerPlayer() << endl;
+		file << encodeString(players->at(i)->GetPlayerName()) << ' ' << players->at(i)->isComputerPlayer() << ' ' << players->at(i)->getNumSoldiers() << ' ' << players->at(i)->getNumCavalry() << ' ' << players->at(i)->getNumArtillery() << ' ' << players->at(i)->getCardBonus() << endl;
 	}
 }
 

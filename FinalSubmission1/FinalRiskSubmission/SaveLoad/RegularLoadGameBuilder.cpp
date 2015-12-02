@@ -19,7 +19,11 @@ void RegularLoadGameBuilder::buildPlayers()
 
 	string playerInfo;
 	int numPlayers;
-	file >> playerInfo >> numPlayers;
+	int soldiers;
+	int cavalry;
+	int artillery;
+	int cardBonus;
+	file >> playerInfo >> numPlayers >> soldiers >> cavalry >> artillery >> cardBonus;
 
 	if (playerInfo == PLAYERID)
 	{
@@ -29,7 +33,7 @@ void RegularLoadGameBuilder::buildPlayers()
 			bool isAI;
 			file >> playerName >> isAI;
 
-			saveInstance->addPlayerInfo(decodeString(playerName), isAI);
+			saveInstance->addPlayerInfo(decodeString(playerName), isAI, soldiers, cavalry, artillery, cardBonus);
 		}
 	}
 	else

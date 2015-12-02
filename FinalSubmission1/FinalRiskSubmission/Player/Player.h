@@ -60,7 +60,12 @@ public:
 	void gainCard(int i);
 	int checkCardsBonus();
 	void giveCards(Player* other);
-
+	int getNumCards() const;
+	int getNumSoldiers() const;
+	int getNumCavalry() const;
+	int getNumArtillery() const;
+	int getCardBonus() const;
+	void setCards(int, int, int, int);
 
 };
 #endif

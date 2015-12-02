@@ -53,3 +53,8 @@ string Deff::executeTarget(Country* sourceCountry)
 	return minIndex->getName();
 }
 
+string Deff::getID()
+{
+	return DEFFID;
+}
+

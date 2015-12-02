@@ -17,4 +17,6 @@ public:
 	string Deff::executeSource(std::vector<Country*>  occupied);
 	
 	string Deff::executeTarget(Country* sourceCountry);
+
+	string getID() override;
 };

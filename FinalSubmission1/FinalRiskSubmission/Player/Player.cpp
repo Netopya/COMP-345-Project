@@ -192,3 +192,37 @@ void Player::giveCards(Player* other) {
 		artillery--;
 	}
 }
+
+int Player::getNumCards() const
+{
+	return soldier + cavalry + artillery;
+}
+
+int Player::getNumSoldiers() const
+{
+	return soldier;
+}
+
+int Player::getNumCavalry() const
+{
+	return cavalry;
+}
+
+int Player::getNumArtillery() const
+{
+	return artillery;
+}
+
+int Player::getCardBonus() const
+{
+	return cardBonus;
+}
+
+void Player::setCards(int s, int c, int a, int b)
+{
+	soldier = s;
+	cavalry = c;
+	artillery = a;
+	cardBonus = b;
+}
+

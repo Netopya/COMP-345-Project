@@ -151,6 +151,7 @@
     <ClInclude Include="Writer\Writer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="A3.h" />
     <ClCompile Include="GameLogView\GameLogView.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapView\MapView.cpp" />

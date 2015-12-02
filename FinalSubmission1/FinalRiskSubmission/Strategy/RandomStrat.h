@@ -18,4 +18,6 @@ public:
 	string executeSource(std::vector<Country*>  occupied);
 	
 	string executeTarget(Country* sourceCountry);
+
+	string getID() override;
 };

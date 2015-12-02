@@ -16,4 +16,6 @@ public:
 	string Aggro::executeSource(std::vector<Country*>  occupied);
 	
 	string Aggro::executeTarget(Country* sourceCountry);
+
+	string getID() override;
 };

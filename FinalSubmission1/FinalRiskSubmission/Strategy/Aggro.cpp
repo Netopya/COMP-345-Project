@@ -49,3 +49,8 @@ string Aggro::executeTarget(Country* sourceCountry)
 	return minIndex->getName();
 }
 
+string Aggro::getID()
+{
+	return AGGROID;
+}
+
