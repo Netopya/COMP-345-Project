@@ -7,6 +7,13 @@
 #include "..\MyObservable\MyObservable.h"
 #include "..\World\World.h"
 
+#include <ctime>
+#include "..\Strategy\Strategy.h"
+#include "..\Strategy\Deff.h"
+#include "..\Strategy\Aggro.h"
+#include "..\Strategy\RandomStrat.h"
+class Strategy;
+
 using namespace std;
 
 /*
@@ -22,6 +29,8 @@ private:
 	bool computerPlayer; //Is AI
 	class World* map;
 	int wins;
+	Strategy *strat;
+	int soldier=3, cavalry=3, artillery=3, cardBonus;
 public:
 	Player(string, World*, bool);
 	string GetPlayerName();
@@ -43,5 +52,14 @@ public:
 	 * Get controlled continents.
 	 */
 	vector<class Continent*> getContinents();
+
+	void setStrat(Strategy* type);
+	string executeStrategy();
+	string executeStrategyTarget(Country*  selectCountry);
+	void gainCard();
+	void gainCard(int i);
+	int checkCardsBonus();
+
+
 };
 #endif

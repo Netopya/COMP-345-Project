@@ -40,6 +40,9 @@
     <Filter Include="SaveLoad">
       <UniqueIdentifier>{ce37ad09-4712-47f7-a25a-f06936c1675c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Strategy">
+      <UniqueIdentifier>{dd56190c-be08-4d97-9616-f228df45ec28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MapRessourceFiles\World.txt">
@@ -119,6 +122,18 @@
     <ClInclude Include="GameLog\SimpleGameLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Strategy\Strategy.h">
+      <Filter>Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Strategy\Deff.h">
+      <Filter>Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Strategy\Aggro.h">
+      <Filter>Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Strategy\RandomStrat.h">
+      <Filter>Strategy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -165,6 +180,15 @@
     </ClCompile>
     <ClCompile Include="GameLogView\GameLogView.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Strategy\Aggro.cpp">
+      <Filter>Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Strategy\Deff.cpp">
+      <Filter>Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Strategy\RandomStrat.cpp">
+      <Filter>Strategy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

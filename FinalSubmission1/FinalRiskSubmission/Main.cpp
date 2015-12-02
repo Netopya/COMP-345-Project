@@ -13,6 +13,10 @@
 #include "GameLog\PhaseGameLog.h"
 #include "GameLogView\GameLogView.h"
 #include <algorithm> 
+#include "Strategy\Strategy.h"
+#include "Strategy\Deff.h"
+#include "Strategy\Aggro.h"
+#include "Strategy\RandomStrat.h"
 
 #include "SaveLoad\RegularSaveGameBuilder.h"
 #include "SaveLoad\RegularLoadGameBuilder.h"
@@ -635,6 +639,8 @@ void playerReinforce(Player* player)
 
 	// Get the number of reinforcements (atleast 1 army)
 	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
+	numReinforcements += player->checkCardsBonus();
+	//@TODO continent bonus
 
 	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
@@ -706,10 +712,39 @@ void playerAttack(Player* player)
 	int continueAttack;
 	bool done = false;
 	bool earnCard = false;
+	bool activeStrat = false;
+	int stratQ = requestInt("Set strategy?\n0. No\n1. Random\n2. Aggressive\n3. Defensive", "Invalid Input", 0, 3);
+	switch(stratQ) {
+	case 0:
+		activeStrat = false;
+		break;
+	case 1:
+		activeStrat = true;
+		player->setStrat(new RandomStrat());
+		cout << "Random strategy selected" << endl;
+		break;
+	case 2:
+		activeStrat = true;
+		player->setStrat(new Aggro());
+		cout << "Aggressive strategy selected" << endl;
+		break;
+	case 3:
+		activeStrat = true;
+		player->setStrat(new Deff());
+		cout << "Defensive strategy selected" << endl;
+		break;
+	}
 
 	while (!done) {
-		continueAttack = requestInt("Continue to Attack phase?\n0. No\n1. Yes", "Invalid Input", 0, 1);
-		done = continueAttack == 0;
+		if (activeStrat) {
+			cout << "Continue to Attack phase?\n0. No\n1. Yes" << endl;
+			string answer = player->executeStrategy();
+			done = answer == "0";
+		}
+		else {
+			continueAttack = requestInt("Continue to Attack phase?\n0. No\n1. Yes", "Invalid Input", 0, 1);
+			done = continueAttack == 0;
+		}
 		if (done) break;
 		validCountry = false;
 		cout << "Enter 0 to cancel attack." << endl;
@@ -717,8 +752,15 @@ void playerAttack(Player* player)
 		while (!validCountry)
 		{
 			string inCountry;
-			cout << "Enter a country to attack with: " << endl;
-			cin >> inCountry;
+			if (activeStrat) {
+				cout << "Enter a country to attack with: " << endl;
+				inCountry = player->executeStrategy();
+				cout << inCountry << endl;
+			}
+			else {
+				cout << "Enter a country to attack with: " << endl;
+				cin >> inCountry;
+			}
 			if (inCountry == "0")break;//Canceled input
 
 			playerCountry = map->getCountryFromName(inCountry.c_str()); //map.getCountryByName(inCountry);
@@ -762,10 +804,16 @@ void playerAttack(Player* player)
 		while (!validCountry)
 		{
 			string inCountry;
-			cout << "Enter a country to attack: " << endl;
-			//list  neighbouring countries
+			if (activeStrat) {
+				cout << "Enter a country to attack: " << endl;
+				inCountry = player->executeStrategyTarget(playerCountry);
+			}
+			else {
+				cout << "Enter a country to attack: " << endl;
+				//list  neighbouring countries
 
-			cin >> inCountry;
+				cin >> inCountry;
+			}
 			if (inCountry == "0")break;//Canceled input
 			enemyCountry = map->getCountryFromName(inCountry.c_str());
 
@@ -863,6 +911,8 @@ void playerAttack(Player* player)
 				battleDone = true;
 				break;
 			}
+			autoplay = activeStrat;
+
 			//Manual Play Active player Input
 			if (!autoplay) {
 				string activeBattleQ = "0. End Battle Step\n1. Send 1 Army to attack\n2. Send 2 Armies to attack\n3. Send 3 Armies to attack\n4. Autoplay";
@@ -995,6 +1045,7 @@ void playerAttack(Player* player)
 
 	}
 	//@TODO Give card if atleast one country was conquered.  earnCard is true if atleast one country was conquered.
+	if(earnCard)player->gainCard();
 }
 
 void checkPlayerAndKill(Player* player)

@@ -96,3 +96,78 @@ vector<Continent*> Player::getContinents()
 
 	return continents;
 }
+
+
+void Player::setStrat(Strategy* type)
+{
+	strat = type;
+}
+string Player::executeStrategy()
+{
+	return this->strat->executeSource(this->getCountries());
+}
+string Player::executeStrategyTarget(Country*  selectCountry)
+{
+	return this->strat->executeTarget(selectCountry);
+}
+void Player::gainCard() {
+	int rnd = rand() % 3;
+	switch (rnd) {
+	case 0:
+		soldier++;
+		cout << "Gained a Soldier Card." << endl;
+		break;
+	case 1:
+		cavalry++;
+		cout << "Gained a Soldier Card." << endl;
+		break;
+	case 2:
+		artillery++;
+		cout << "Gained a Soldier Card." << endl;
+		break;
+	}
+}
+void Player::gainCard(int i) {
+	int rnd =  i;
+	switch (rnd) {
+	case 0:
+		soldier++;
+		break;
+	case 1:
+		cavalry++;
+		break;
+	case 2:
+		artillery++;
+		break;
+	}
+}
+int Player::checkCardsBonus() {
+	int bonus = 0;
+	while (soldier > 3) {
+		soldier -= 3;
+		cardBonus += 1;
+		bonus += cardBonus * 5;
+		cout << "Cardbonus increased" << endl;
+	}
+	while (cavalry > 3) {
+		cavalry -= 3;
+		cardBonus += 1;
+		bonus += cardBonus * 5;
+		cout << "Cardbonus increased" << endl;
+	}
+	while (artillery > 3) {
+		artillery -= 3;
+		cardBonus += 1;
+		bonus += cardBonus * 5;
+		cout << "Cardbonus increased" << endl;
+	}
+	while (soldier > 0 && cavalry > 0 && artillery > 0) {
+		soldier--;
+		cavalry--;
+		artillery--;
+		cardBonus += 1;
+		bonus += cardBonus * 5;
+		cout << "Cardbonus increased" << endl;
+	}
+	return bonus;
+}

@@ -141,6 +141,10 @@
     <ClInclude Include="SaveLoad\RegularLoadGameBuilder.h" />
     <ClInclude Include="SaveLoad\RegularSaveGameBuilder.h" />
     <ClInclude Include="SaveLoad\SaveLoadBuilder.h" />
+    <ClInclude Include="Strategy\Aggro.h" />
+    <ClInclude Include="Strategy\Deff.h" />
+    <ClInclude Include="Strategy\RandomStrat.h" />
+    <ClInclude Include="Strategy\Strategy.h" />
     <ClInclude Include="World\Continent.h" />
     <ClInclude Include="World\Country.h" />
     <ClInclude Include="World\World.h" />
@@ -158,6 +162,9 @@
     <ClCompile Include="SaveLoad\GameSaveInstance.cpp" />
     <ClCompile Include="SaveLoad\RegularLoadGameBuilder.cpp" />
     <ClCompile Include="SaveLoad\RegularSaveGameBuilder.cpp" />
+    <ClCompile Include="Strategy\Aggro.cpp" />
+    <ClCompile Include="Strategy\Deff.cpp" />
+    <ClCompile Include="Strategy\RandomStrat.cpp" />
     <ClCompile Include="World\Continent.cpp" />
     <ClCompile Include="World\Country.cpp" />
     <ClCompile Include="World\World.cpp" />
