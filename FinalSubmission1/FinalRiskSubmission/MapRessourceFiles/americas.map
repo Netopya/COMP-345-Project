@@ -1,6 +1,6 @@
 [Continents=2]
-North America=0
-South America=1
+North America=0,4
+South America=1,5
 [Territories=9]
 Canada=0
 USA=1
