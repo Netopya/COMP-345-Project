@@ -102,6 +102,9 @@ int playerToRestore = -1;
 int main()
 {
 	cout << "Welcome to RISK!" << endl;
+	
+	// Randomize the random number generator using the current time as a seed
+	srand((unsigned int)time(NULL));
 
 	int mapOption = requestInt("Would you like to: \n 1. Load map \n 2. Create new map", "You did not enter 1 or 2", 1, 2);
 
