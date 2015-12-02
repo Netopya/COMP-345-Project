@@ -30,7 +30,7 @@ private:
 	class World* map;
 	int wins;
 	Strategy *strat;
-	int soldier=3, cavalry=3, artillery=3, cardBonus;
+	int soldier=0, cavalry=0, artillery=0, cardBonus=0;
 public:
 	Player(string, World*, bool);
 	string GetPlayerName();
@@ -59,6 +59,7 @@ public:
 	void gainCard();
 	void gainCard(int i);
 	int checkCardsBonus();
+	void giveCards(Player* other);
 
 
 };

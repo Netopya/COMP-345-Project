@@ -1043,6 +1043,10 @@ void playerAttack(Player* player)
 		// Check if any of the players involved have been eliminated
 		checkPlayerAndKill(player);
 		checkPlayerAndKill(enemy);
+		bool stealCards = !enemy->isAlive();
+		if (stealCards) {
+			enemy->giveCards(player);
+		}
 
 
 
@@ -1167,7 +1171,7 @@ void playerFortify(Player* player)
 
 
 						//Game Log in Fortification phase
-						string str = "Sent " + to_string(armyTransfer) + " armies from " + string(country->getName()) + "to country: " + string(toCountry->getName());
+						string str = "Sent " + to_string(armyTransfer) + " armies from " + string(country->getName()) + " to country: " + string(toCountry->getName());
 						gameLog->LogAction(player->GetPlayerName(), 2, str);
 						if (gameLog->okToPrint(player->GetPlayerName(), 2)) {
 							gameLog->notifyObservers();
