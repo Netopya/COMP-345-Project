@@ -643,7 +643,13 @@ void playerReinforce(Player* player)
 	// Get the number of reinforcements (atleast 1 army)
 	int numReinforcements = max(1, (int)floor(playerCountries.size() / 3));
 	numReinforcements += player->checkCardsBonus();
-	//@TODO continent bonus
+	
+	// Add the continent control values to reinforcement armies
+	for (unsigned i = 0; i < player->getContinents().size(); i++)
+	{
+		numReinforcements += player->getContinents()[i]->getControlValue();
+		cout << "For controlling all of " << player->getContinents()[i]->getName() << " " << player->GetPlayerName() << " receives " << player->getContinents()[i]->getControlValue() << " extra armies" << endl;
+	}
 
 	// Loop until all the reinforcements are used up
 	while (numReinforcements > 0)
