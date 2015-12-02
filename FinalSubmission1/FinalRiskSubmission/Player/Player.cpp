@@ -171,3 +171,21 @@ int Player::checkCardsBonus() {
 	}
 	return bonus;
 }
+
+void Player::giveCards(Player* other) {
+	cout << other->GetPlayerName() << " has taken cards from " << this->GetPlayerName() << endl;
+	while (soldier > 0) {
+		other->gainCard(0);
+		soldier--;
+	}
+
+	while (cavalry > 0) {
+		other->gainCard(1);
+		cavalry--;
+	}
+
+	while (artillery > 0) {
+		other->gainCard(2);
+		artillery--;
+	}
+}
