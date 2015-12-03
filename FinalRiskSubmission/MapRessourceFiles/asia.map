@@ -1,9 +1,0 @@
-[Continents=1]
-Asia=0,4
-[Territories=2]
-China=0
-Japan=1
-[Links=1]
-0,0,0,0,1
-1,0,0,0,0
-
