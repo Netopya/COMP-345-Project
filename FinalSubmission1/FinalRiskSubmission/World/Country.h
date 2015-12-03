@@ -16,7 +16,7 @@ using namespace std;
 class Country
 {
 	//Name of the country.
-	const char* name;
+	string name;
 	//Continent it is hold by.
 	Continent* continent;
 	//Unique value.
@@ -31,10 +31,10 @@ class Country
 	int numArmies;
 
 public:
-	Country(const char* _name, int _registryValue);
+	Country(string _name, int _registryValue);
 	void setCartesian(int _positionX, int _positionY);
 	void setContinent(Continent* _continent);
-	const char* getName();
+	string getName();
 	vector<Country*>* getConnectedCountries();
 	Continent* getContinent();
 	int getRegistryValue();

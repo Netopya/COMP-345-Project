@@ -22,15 +22,16 @@ class Reader
 private:
 
 	bool isOpened;
-	const char* fileName;
+	string fileName;
 	ifstream _is;
 
 public:
 
-	Reader(const char*);
+	Reader(string);
 	bool Open();
 	void Close();
 	bool IsOpened();
+	char* getNextLine();
 
 	/*
 	* Gives the byte at the actual stream position.

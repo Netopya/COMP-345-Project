@@ -147,7 +147,10 @@
     <ClInclude Include="Strategy\Strategy.h" />
     <ClInclude Include="World\Continent.h" />
     <ClInclude Include="World\Country.h" />
+    <ClInclude Include="World\TwoWayWorldAdapter.h" />
     <ClInclude Include="World\World.h" />
+    <ClInclude Include="World\WorldConquest.h" />
+    <ClInclude Include="World\WorldCustom.h" />
     <ClInclude Include="Writer\Writer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +172,8 @@
     <ClCompile Include="World\Continent.cpp" />
     <ClCompile Include="World\Country.cpp" />
     <ClCompile Include="World\World.cpp" />
+    <ClCompile Include="World\WorldConquest.cpp" />
+    <ClCompile Include="World\WorldCustom.cpp" />
     <ClCompile Include="Writer\Writer.cpp" />
   </ItemGroup>
   <ItemGroup>

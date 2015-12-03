@@ -4,6 +4,9 @@
 #include <time.h>
 #include <algorithm>
 #include "World\World.h"
+#include "World\WorldConquest.h"
+#include "World\WorldCustom.h"
+#include "World\TwoWayWorldAdapter.h"
 #include "MapView\MapView.h"
 #include "PlayerView\PlayerView.h"
 
@@ -52,8 +55,9 @@ const int NUM_PHASES = 3;
 const string PHASES[] = { "Reinforcement", "Attack", "Fortification" };
 int num_Countries;
 int gameSavingMode = 1;
+bool saveAsOppositeFile = false;
 
-World* map;
+WorldCustom* map;
 MapView* mapView; // The map view component
 
 
@@ -89,7 +93,7 @@ void addContinent();// Add a continent
 void addLink();		// Add links between countries
 void saveMap();		// Save the map to a file
 
-string queryMapFile(); //Ask for the map file to load
+void queryMapFile(); //Ask for the map file to load
 
 // Request an integer from the user, showing an error message until they enter a valid number within the bounds
 int requestInt(string question, string errorMessage, int min, int max);
@@ -98,6 +102,7 @@ void saveGame(int player, int phase); // Save the game
 bool restorePhaseFromSave = false;
 int phaseToRestore = -1;
 int playerToRestore = -1;
+
 
 
 int main()
@@ -112,7 +117,8 @@ int main()
 	// If creating a new map, go directly into the map editor
 	if (mapOption == 2)
 	{
-		map = new World();
+		//Just using custom for editing.
+		map = new WorldCustom();
 
 		// Setup the map view
 		mapView = new MapView(map);
@@ -124,13 +130,13 @@ int main()
 	else
 	{
 		// Setup the map
-		map = new World(queryMapFile().c_str());
+		queryMapFile();
 		// Setup the map view
 		mapView = new MapView(map);
 	}
 
 	// Check if the map was correctly loaded/created
-	if (!(map->getCountries()->size() > 0))
+	if (map->checkLastOperationSuccess() == false)
 	{
 		cout << "Could not load map file" << endl;
 		cout << "Error: " << map->getLastErrorMessage() << endl;
@@ -259,13 +265,59 @@ int main()
 	return 0;
 }
 
-string queryMapFile()
+void queryMapFile()
 {
-	// ask for a file name
+	int pos = string::npos;
 	string filename;
-	cout << "Enter the name of the map file to load" << endl;
-	cin >> filename;
-	return "MapRessourceFiles\\" + filename;
+
+	while (pos == string::npos)
+	{
+		filename = "";
+		cout << "Enter the name of the map file to load." << endl;
+		cout << "Accepting: .map (with conquest formatting)" << endl;
+		cout << "           .txt (with custom formatting)" << endl;
+		cout << "Enter the name of the map file to load." << endl;
+		cin >> filename;
+		filename = "MapRessourceFiles\\" + filename;
+		pos = filename.find_last_of(".") + 1;
+		if (pos == string::npos)
+			cout << "Bad file name." << endl;
+	}
+	string opposite = "";
+	if (filename.substr(pos) == "txt")
+	{
+		opposite = "conquest";
+		map = new WorldCustom(filename);
+		map->fromFile();
+		cout << map->getLastErrorMessage() << endl;
+	}
+	if (filename.substr(pos) == "map")
+	{
+		opposite = "custom";
+		WorldConquest* mapConquest = new WorldConquest(filename);
+		mapConquest->fromFile();
+		cout << mapConquest->getLastErrorMessage() << endl;
+		map = new TwoWayFileFormatAdapter(mapConquest);
+	}
+	
+	int request = requestInt("Would you like to make a " + opposite + " version of this file?\nThis file won't be accessible until next run.\nEnter 1 for yes, 2 for no.", "Must be 1 or 2.", 1, 2);
+	if (request == 1)
+	{
+		if (opposite == "conquest")
+		{
+			WorldConquest* mapConquest = new TwoWayFileFormatAdapter(map);
+			mapConquest->toFile();
+			cout << mapConquest->getLastErrorMessage() << endl;
+		}
+		if (opposite == "custom")
+		{
+			map->toFile();
+			cout << map->getLastErrorMessage() << endl;
+		}
+	}
+	if (request == 2)
+	{
+	}
 }
 
 void mapEditor()
@@ -442,10 +494,10 @@ void saveMap()
 		string filename;
 		cout << "Enter the name of the new file" << endl;
 		cin >> filename;
-		filename += ".map";
+		//filename += ".map";
 
 		// Save the file
-		map->toFile(filename.c_str());
+		map->toFile(/*filename*/);
 	}
 }
 

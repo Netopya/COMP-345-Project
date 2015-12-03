@@ -1,6 +1,6 @@
 #include "Reader.h"
 
-Reader::Reader(const char* _fileName)
+Reader::Reader(string _fileName)
 {
 	isOpened = false;
 	fileName = _fileName;
@@ -131,6 +131,35 @@ __int32 Reader::getNextPosSignedINT32()
 	free(buffer);
 
 	return (errno != ERANGE) ? ret : throw fs; //Throws file syntax error.
+}
+
+
+char* Reader::getNextLine()
+{
+	int count = -1;
+	char curr = NULL;
+
+	int iniPos = _is.tellg();
+
+	do
+	{
+		count++;
+		_is.get(curr);
+
+		if (!_is.good())
+			throw fng; //Throws file not good error.
+
+	} while (curr != '\n');
+
+	char* ret = new char[count + 1];
+	ret[count] = '\0';
+
+	_is.seekg(iniPos);
+	_is.read(ret, count);
+
+	flushNoCheck(1);
+
+	return ret;
 }
 
 /*

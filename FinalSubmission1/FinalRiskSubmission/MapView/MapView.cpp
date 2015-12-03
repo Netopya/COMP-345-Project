@@ -90,10 +90,10 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 			switch (j)
 			{
 			case 0:
-				cout << left << setw(columnWidth) << truncateChar(countries[i]->getName(), columnWidth) << char(179); //Country name.
+				cout << left << setw(columnWidth) << truncateChar(countries[i]->getName().c_str(), columnWidth) << char(179); //Country name.
 				break;
 			case 1:
-				cout << left << setw(columnWidth) << truncateChar(countries[i]->getContinent()->getName(), columnWidth) << char(179); //Continent name.
+				cout << left << setw(columnWidth) << truncateChar(countries[i]->getContinent()->getName().c_str(), columnWidth) << char(179); //Continent name.
 				break;
 			case 2:
 				cout << left << setw(columnWidth) << countries[i]->getControllingPlayer()->GetPlayerName(columnWidth) << char(179); //Owner of the country.
@@ -107,7 +107,7 @@ void MapView::printCountries(vector<Country*> countries, int start, int end)
 			{
 				if ((j - 4) < countries[i]->getConnectedCountries()->size())
 				{
-					cout << left << setw(columnWidth) << truncateChar((*(countries[i]->getConnectedCountries()))[j - 4]->getName(), columnWidth) << char(179); //Adjacent countries
+					cout << left << setw(columnWidth) << truncateChar((*(countries[i]->getConnectedCountries()))[j - 4]->getName().c_str(), columnWidth) << char(179); //Adjacent countries
 				}
 				else
 				{

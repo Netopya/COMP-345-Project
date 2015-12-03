@@ -134,6 +134,15 @@
     <ClInclude Include="Strategy\RandomStrat.h">
       <Filter>Strategy</Filter>
     </ClInclude>
+    <ClInclude Include="World\WorldConquest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\WorldCustom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World\TwoWayWorldAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -191,6 +200,12 @@
       <Filter>Strategy</Filter>
     </ClCompile>
     <ClCompile Include="A3.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\WorldConquest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\WorldCustom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

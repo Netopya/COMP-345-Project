@@ -1,6 +1,6 @@
 #include "Country.h"
 
-Country::Country(const char* _name, int _registryValue)
+Country::Country(string _name, int _registryValue)
 {
 	connectedCountries = new vector<Country*>();
 	//Cartesian position of the location of the middle pixel of this specific country.
@@ -11,6 +11,10 @@ Country::Country(const char* _name, int _registryValue)
 	registryValue = _registryValue;
 	numArmies = 1;
 }
+string Country::getName()
+{
+	return name;
+}
 void Country::setCartesian(int _positionX, int _positionY)
 {
 	positionX = _positionX;
@@ -19,10 +23,6 @@ void Country::setCartesian(int _positionX, int _positionY)
 void Country::setContinent(Continent* _continent)
 {
 	continent = _continent;
-}
-const char* Country::getName()
-{
-	return name;
 }
 vector<Country*>* Country::getConnectedCountries()
 {
