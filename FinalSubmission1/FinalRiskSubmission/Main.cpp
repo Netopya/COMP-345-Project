@@ -153,7 +153,7 @@ int main()
 		system("cls");
 
 		// Ask for the game mode
-		int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game \n 4. Configure Game Saving Settings", "Please enter a selection of 1, 2, 3 or 4", 1, 4);
+		int gameMode = requestInt("What would you like to do today? \n 1. Play Game \n 2. Edit Map \n 3. Load Saved Game", "Please enter a selection of 1, 2, or 3", 1, 3);
 
 
 		if (gameMode == 2)
@@ -218,22 +218,13 @@ int main()
 			}
 			else
 			{
+				// Ask the user how they would like saving configured
+				gameSavingMode = requestInt("How would you like to configure game saving? Currently selected: " + to_string(gameSavingMode) + "\n 1. Ask for save \n 2. Automatically save \n 3. Never save", "You did not enter a valid number", 1, 3);
+
 				settingGameLog();// Dependent on Player List must be after players = *(instance->createPlayers(map));
 
 				// All is well, proceed into the game
 				runGame();
-			}
-		}
-		else if (gameMode == 4)
-		{
-			// Give the user the option of configuring how saving the game will be handled
-
-			int option = requestInt("How would you like to configure game saving? Currently selected: " + to_string(gameSavingMode) + "\n 1. Ask for save \n 2. Automatically save \n 3. Never save \n 4. Return to previous menu", "You did not enter a valid number", 1, 4);
-			if (option > 0 && option < 4)
-			{
-				gameSavingMode = option;
-				cout << "Game save option updated" << endl;
-				system("pause");
 			}
 		}
 		else
@@ -246,6 +237,9 @@ int main()
 			num_Countries = (int)map->getCountries()->size();
 
 			queryPlayers();
+
+			// Ask the user how they would like saving configured
+			gameSavingMode = requestInt("How would you like to configure game saving? \n 1. Ask for save \n 2. Automatically save \n 3. Never save", "You did not enter a valid number", 1, 3);
 
 			settingGameLog();// Dependent on Player List must be after queryPlayers();
 
