@@ -1104,7 +1104,7 @@ void playerAttack(Player* player)
 
 
 	}
-	//@TODO Give card if atleast one country was conquered.  earnCard is true if atleast one country was conquered.
+
 	if(earnCard)player->gainCard();
 }
 

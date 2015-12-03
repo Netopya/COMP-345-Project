@@ -51,9 +51,6 @@ public:
 	void connect(Country* _connection);
 	void setControllingPlayer(Player* player);
 
-	/*
-	 * TODO
-	 */
 	Player* getControllingPlayer() const;
 
 	int getNumArmies();
