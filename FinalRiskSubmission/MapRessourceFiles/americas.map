@@ -1,0 +1,24 @@
+[Continents=2]
+North America=0,4
+South America=1,5
+[Territories=9]
+Canada=0
+USA=1
+Mexico=2
+Bahamas=3
+Greenland=4
+Bermuda=5
+Venezuela=6
+Brazil=7
+Peru=8
+[Links=9]
+0,100,100,0,1,4,5
+1,0,0,0,0,5,2,3
+2,0,0,0,1,3,6
+3,0,0,0,1,2,6
+4,0,0,0,0
+5,0,0,0,0,1
+6,0,0,1,2,3,7,8
+7,0,0,1,6,8
+8,0,0,1,6,7
+
