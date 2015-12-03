@@ -29,7 +29,6 @@ void RegularSaveGameBuilder::buildPlayers()
 		string stratID = strat == nullptr ? Strategy::NONEID : strat->getID();
 
 		file << encodeString(players->at(i)->GetPlayerName()) << ' ' 
-			<< players->at(i)->isComputerPlayer() << ' ' 
 			<< players->at(i)->getNumSoldiers() << ' '
 			<< players->at(i)->getNumCavalry() << ' '
 			<< players->at(i)->getNumArtillery() << ' '

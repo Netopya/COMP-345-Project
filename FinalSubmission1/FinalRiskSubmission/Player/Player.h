@@ -26,13 +26,12 @@ class Player : public MyObservable
 private:
 	string playerName;
 	bool alive;
-	bool computerPlayer; //Is AI
 	class World* map;
 	int wins;
 	Strategy *strat;
 	int soldier=0, cavalry=0, artillery=0, cardBonus=0;
 public:
-	Player(string, World*, bool);
+	Player(string, World*);
 	string GetPlayerName();
 	/*
 	 * Get the player's name truncated to a max length.
@@ -43,7 +42,6 @@ public:
 	int getNumArmies();
 	int getNumWins() const;
 	void addWin();
-	bool isComputerPlayer() const;
 	Strategy* getStrategy() const;
 
 	/*

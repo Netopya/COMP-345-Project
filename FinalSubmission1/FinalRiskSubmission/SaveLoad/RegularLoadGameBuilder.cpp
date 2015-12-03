@@ -27,16 +27,15 @@ void RegularLoadGameBuilder::buildPlayers()
 		for (int i = 0; i < numPlayers; i++)
 		{
 			string playerName;
-			bool isAI;
 			int soldiers;
 			int cavalry;
 			int artillery;
 			int cardBonus;
 			string strategy;
 
-			file >> playerName >> isAI >> soldiers >> cavalry >> artillery >> cardBonus >> strategy;
+			file >> playerName >> soldiers >> cavalry >> artillery >> cardBonus >> strategy;
 
-			saveInstance->addPlayerInfo(decodeString(playerName), isAI, soldiers, cavalry, artillery, cardBonus, strategy);
+			saveInstance->addPlayerInfo(decodeString(playerName), soldiers, cavalry, artillery, cardBonus, strategy);
 		}
 	}
 	else

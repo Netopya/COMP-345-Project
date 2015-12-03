@@ -1,10 +1,9 @@
 #include "Player.h"
 
-Player::Player(string playerName, World* map, bool ai)
+Player::Player(string playerName, World* map)
 {
 	this->playerName = playerName;
 	this->map = map;
-	computerPlayer = ai;
 	alive = true;
 	wins = 0;	
 }
@@ -50,11 +49,6 @@ int Player::getNumWins() const
 void Player::addWin()
 {
 	wins += 1;
-}
-
-bool Player::isComputerPlayer() const
-{
-	return computerPlayer;
 }
 
 Strategy * Player::getStrategy() const
