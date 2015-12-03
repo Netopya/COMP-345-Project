@@ -1,14 +1,15 @@
-PLAYERINFO 2
-Michael 0 0 0 0 0 NONE
+PLAYERINFO 3
+James~Bond 0 0 0 1 0 NONE
+Michael~Bilinsky 0 0 0 0 0 NONE
 Paul 0 0 0 0 0 NONE
-GAMEINFO Michael Attack
+GAMEINFO James~Bond Fortification
 WORLDINFO 9
 Canada Paul 1
-USA Michael 2
-Mexico Michael 1
-Bahamas Paul 1
-Greenland Paul 1
-Bermuda Michael 1
-Venezuela Paul 1
-Brazil Michael 1
-Peru Paul 1
+USA Paul 1
+Mexico James~Bond 1
+Bahamas Michael~Bilinsky 1
+Greenland Michael~Bilinsky 1
+Bermuda Michael~Bilinsky 1
+Venezuela James~Bond 1
+Brazil James~Bond 1
+Peru James~Bond 2
