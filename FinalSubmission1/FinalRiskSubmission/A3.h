@@ -54,8 +54,11 @@ public:
 
 //Interface
 class IPlayerStats {
+protected:
+	Player* p;
 public:
 	virtual void printStats() = 0;
+	Player* getPlayer() { return p; }
 };
 //Concrete
 class PlayerStats : public IPlayerStats {
@@ -122,9 +125,7 @@ public:
 	}
 };
 //This is the connection between the observer and the decorator 
-class StatsView : public AbstractObserver, public IPlayerStats {
-private:
-	Player* p;
+class StatsView : public AbstractObserver, public IPlayerStats {	
 public:
 	StatsView(Player* pl) {
 		p = pl;
