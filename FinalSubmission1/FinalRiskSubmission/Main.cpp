@@ -951,7 +951,7 @@ void playerAttack(Player* player)
 			}
 			else if (enemyCountry->getNumArmies() < 1) { //Win Condition
 				std::cout << "Conquered WIN" << std::endl;
-				std::cout << "Move " << lastDiceRollCount << " or more Armies into the conquered country" << std::endl;
+				std::cout << "Move " << lastDiceRollCount << " Armies into the conquered country" << std::endl;
 				earnCard = true;
 				enemyCountry->addArmies(lastDiceRollCount);
 				playerCountry->removeArmies(lastDiceRollCount);
@@ -966,14 +966,15 @@ void playerAttack(Player* player)
 			//Manual Play Active player Input
 			if (!autoplay) {
 				string activeBattleQ = "0. End Battle Step\n1. Send 1 Army to attack\n2. Send 2 Armies to attack\n3. Send 3 Armies to attack\n4. Autoplay";
-				activeInput = requestInt(activeBattleQ, "Invalid Input", 0, 4);
+				
 				//displayedOptions = 5;
 				//Input Validation
 				while (!activeDone)
 				{
+					activeInput = requestInt(activeBattleQ, "Invalid Input", 0, 4);
 					if (activeInput == 0)
 					{
-						activeDone = true; done = true;
+						activeDone = true; battleDone = true;
 					}
 					if (activeInput == 1 && playerCountry->getNumArmies() < 2)
 					{
@@ -1002,12 +1003,12 @@ void playerAttack(Player* player)
 			if (!autoplay&& !battleDone)
 			{
 				string defBattleQ = "1. Send 1 Army to defend\n2. Send 2 Armies to defend\n3. Autoplay";
-				defInput = requestInt(defBattleQ, "Invalid Input", 0, 3);
+				
 				//displayedOptions = 4;
 				//Input Validation
 				while (!defDone)
 				{
-
+					defInput = requestInt(defBattleQ, "Invalid Input", 0, 3);
 						//if(defInput== 0)
 						//{defDone=true;done=true;}
 						if (defInput == 1 && enemyCountry->getNumArmies() < 1)
@@ -1031,7 +1032,7 @@ void playerAttack(Player* player)
 			activeDone = false;
 			defDone = false;
 			//Manual play Dice Roll
-			if (!autoplay && !done) {
+			if (!autoplay && !battleDone) {
 
 				std::cout << "  - - - " << activeInput << std::endl;
 				for (int i = 0; i < activeInput; i++) {
@@ -1046,7 +1047,7 @@ void playerAttack(Player* player)
 				}
 
 			}
-			else if (!done) {
+			else if (!battleDone) {
 				//Automatic Dice Roll
 				for (int i = 0; i < std::min(3, playerCountry->getNumArmies() - 1); i++) {
 					int die = (rand() % 6) + 1;
