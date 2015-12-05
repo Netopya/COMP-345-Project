@@ -35,17 +35,26 @@ Mina Abdel Malek 26951791
 Maxime Morin 27501455
 Pawel-Stanislaw Obiedzinski 22026643
 
-COMP 345 Project Intermediate Build
+COMP 345 Project Final Build
 
 -A game of classic risk
--Can load map from a file
+-Can load map from a two different types of file types (implemented with an adapter pattern)
+-Can create a map from scratch
 -Can add countries and continents from a map editor
 -Can save new maps
 -Can play through the reinforement, attack, and fortification phases of the game
--Attacking is in a simplified form (no dice implemented)
--Cards are not yet implemented
+-Can gain extra armies during reinforcement when owning all countries on a continent
+-Attack fully implemented with dice and computer controlled attacking using user selected strategies
+-Cards are gained with winning battles and can be spent to earn extra reinforcements
+-Can view Map and Players status updated in real time (implemented with an observer pattern)
+-Can view Player and Game statistics (implemented with an observer and decorator pattern)
+-Can save a game in progress and load it again (implemented with a builder pattern)
+-Fortifcation to move armies around along a valid path
 
-See README.txt for Visual Studio compilation information
+TIPS
+-Use the "americas.txt" map for the best experience
+-More maps can be found in the "MapRessourceFiles" directory
+
 */
 
 int numberPlayers; // Number of players
