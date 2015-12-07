@@ -1,6 +1,6 @@
 #include "Writer.h"
 
-Writer::Writer(const char* _fileName)
+Writer::Writer(string _fileName)
 {
 	isOpened = false;
 	fileName = _fileName;
