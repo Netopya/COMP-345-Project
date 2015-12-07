@@ -23,12 +23,12 @@ private:
 
 	char integerBuffer[sizeof(char) * INT32_MAX_DIGITS];
 	bool isOpened;
-	string fileName;
+	const char* fileName;
 	ofstream _os;
 
 public:
 
-	Writer(string _fileName);
+	Writer(const char* _fileName);
 	~Writer();
 	bool Open();
 	void Close();
